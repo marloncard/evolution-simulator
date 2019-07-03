@@ -4,18 +4,8 @@ TITLE: Evolution Simulator
 Author: Marlon Card
 Date: June 10, 2019
 
-Over time changes in base genetic structure should be caused by mutations
-Implications are:
-    : New species; unable to reproduce with base org
-    : Can hunt or be hunted by other base species
-    : Still able to produce (hybrid) offspring if which cannot reproduce.
-    : Organism DNA "tag" should be visible
-
-DNA TAG
-
 Sessions:
     : Organism states update once per CYCLE.
-    : 
 """
 import copy
 import os

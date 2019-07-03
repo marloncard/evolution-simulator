@@ -31,6 +31,7 @@ from random import randint
 from random import shuffle
 from models.organism import Organism
 from styletext import ColorText
+from views import print_org
 
 FOOD = 2000
 BIRTHS = 51
@@ -119,16 +120,7 @@ def food_spawn(amount):
         FOOD[randspot] = 0
     print(FOOD)
 
-def print_org(a_list):
-    print("{:<7}{:<10}{:<15}{:<10}{:>10}".format(
-        "Name", "Speed", "Metabolism", "Life", "Age"))
-    for o in a_list:
-        print("{:<7}".format(o.org_name),
-             "{:<10}".format(o.speed),
-             "{:<15}".format(o.metabolism),
-             "{:<10}".format(o.life),
-             "{:>10}".format(o.age)
-             )
+
 
 if __name__ == "__main__":
     main_loop()
