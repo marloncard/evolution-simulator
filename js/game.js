@@ -89,13 +89,15 @@ function create () {
     const map = this.make.tilemap({ key: 'map'});
     const tileset = map.addTilesetImage('evo-default', 'tileset')
 
+    // Layers
     const baseLayer = map.createStaticLayer("Base", tileset, 0, 0);
     const treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
     const waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
     const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0);
 
     // Add organism to scene (full spritesheet)
-    this.slime = this.physics.add.sprite(400, 300,'slime', 'slime-05.png');
+    this.slime = this.physics.add.sprite(400, 330,'slime', 'slime-05.png');
+
 
     // Create animations
     this.anims.create({
@@ -120,22 +122,14 @@ function create () {
         frameRate:15,
         repeat: -1
     })
-    this.anims.create({
-        key: 'east',
-        frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: -09, end: -12, suffix: '.png'}),
-        frameRate:15,
-        repeat: -1
-    })
-
-
 
     //Group of organisms
     this.organisms = this.physics.add.group({
         key: 'slime',
         repeat: 4,
         setXY: {
-            x: 300,
-            y: 300,
+            x: 400,
+            y: 100,
             stepX: 80,
             stepY: 20
         }
@@ -149,6 +143,9 @@ function create () {
         organism.speed = Math.random() * 2 + 1;
         // make item interactive
         organism.setInteractive();
+        this.physics.add.collider(organism, treeLayer);
+        this.physics.add.collider(organism, waterLayer);
+        this.physics.add.collider(organism);
     }, this);
 
     locations = this.add.text(16, 16, 'location: 0, 0', { fontSize: '10px', fill: '#000' })
@@ -160,11 +157,30 @@ function create () {
     this.physics.world.bounds.width = map.widthInPixels-10;
     this.physics.world.bounds.height = map.heightInPixels-10;
     this.slime.setCollideWorldBounds(true);
+
+    // Map Collisions
+    this.physics.add.collider(this.slime, treeLayer);
+    this.physics.add.collider(this.slime, waterLayer);
+    // Specify property
+    treeLayer.setCollisionByProperty({collide:true});
+    waterLayer.setCollisionByProperty({collide:true});
+
+    // Collision debugging (remove in production)
+    // const debugGraphics = this.add.graphics().setAlpha(0.75);
+    // treeLayer.renderDebug(debugGraphics, {
+    //     tileColor: null,
+    //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //     faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    // });
     
     
     
 };
 function update () {
+
+    // Slime movement
+    this.slime.setVelocityX(-64)
+    movementAnim(this.slime)
 
         // Organism movement
         let organisms = this.organisms.getChildren();
