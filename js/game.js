@@ -95,14 +95,16 @@ function create () {
     const waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
     const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0);
 
-    // Add organism to scene (full spritesheet)
+    // Add organism to scene (full spritesheet) -- .setBounce(10).setFriction(0)
     this.slime = this.physics.add.sprite(400, 330,'slime', 'slime-05.png');
 
 
     // Create animations
     this.anims.create({
         key: 'idle',
-        frames: this.anims.generateFrameNames('slime', {prefix: 'slime-0', start: 5, end: 8, suffix: '.png'})
+        frames: this.anims.generateFrameNames('slime', {prefix: 'slime-0', start: 5, end: 8, suffix: '.png'}),
+        frameRate:5,
+        repeat: -1
     })
     this.anims.create({
         key: 'north',
@@ -129,7 +131,7 @@ function create () {
         repeat: 4,
         setXY: {
             x: 400,
-            y: 100,
+            y: 300,
             stepX: 80,
             stepY: 20
         }
@@ -143,9 +145,10 @@ function create () {
         organism.speed = Math.random() * 2 + 1;
         // make item interactive
         organism.setInteractive();
-        this.physics.add.collider(organism, treeLayer);
-        this.physics.add.collider(organism, waterLayer);
-        this.physics.add.collider(organism);
+
+        // this.physics.add.collider(organism, treeLayer);
+        // this.physics.add.collider(organism, waterLayer);
+        
     }, this);
 
     locations = this.add.text(16, 16, 'location: 0, 0', { fontSize: '10px', fill: '#000' })
@@ -161,6 +164,10 @@ function create () {
     // Map Collisions
     this.physics.add.collider(this.slime, treeLayer);
     this.physics.add.collider(this.slime, waterLayer);
+
+    this.physics.add.collider(this.organisms, treeLayer);
+    this.physics.add.collider(this.organisms, waterLayer);
+    this.physics.add.collider(this.organisms);
     // Specify property
     treeLayer.setCollisionByProperty({collide:true});
     waterLayer.setCollisionByProperty({collide:true});
@@ -217,6 +224,8 @@ function update () {
                     organisms[i].setVelocityX(64);
                     //organisms[i].anims.play('west', true)
                     //organisms[i].flipX = true;
+                } else {
+                    randomMovement(organisms[i])
                 }
                 
     // if (organisms[i].x >= this.organismMaxX && organisms[i].speed > 0) {
@@ -231,6 +240,20 @@ function update () {
     //this.slime.anims.play('north', true);
 
 }; 
+
+function randomMovement(obj) {
+    d = Math.random();
+    if (d < 1 && d > 0.98) {
+        obj.setVelocityY(64);
+    } else if (d < 0.98 && d > 0.96) {
+        obj.setVelocityY(-64);
+    } else if (d < 0.96 && d > 0.94) {
+        obj.setVelocityX(64);
+    } else if (d < 0.94 && d > 0.92) {
+        obj.setVelocityX(-64);
+    }
+};
+
 
 function movementAnim(obj) {
     if(obj.body.velocity.y > 0) {
