@@ -4,6 +4,8 @@
 Trees on tilemap source of food (collidable)
 Pool source of water (collidable)
 */
+import Life from './life.js';
+
 
 const gameState = {}
 const config = {
@@ -29,49 +31,9 @@ const config = {
 };
 const game = new Phaser.Game(config);
 
-const directions = {
-    west: { offset: 0, x: -2, y: 0, opposite: 'east' },
-    northWest: { offset: 32, x: -2, y: -1, opposite: 'southEast' },
-    north: { offset: 64, x: 0, y: -2, opposite: 'south' },
-    northEast: { offset: 96, x: 2, y: -1, opposite: 'southWest' },
-    east: { offset: 128, x: 2, y: 0, opposite: 'west' },
-    southEast: { offset: 160, x: 2, y: 1, opposite: 'northWest' },
-    south: { offset: 192, x: 0, y: 2, opposite: 'north' },
-    southWest: { offset: 224, x: -2, y: 1, opposite: 'northEast' }
-};
-
-const anims = {
-    idle: {
-        startFrame: 0,
-        endFrame: 4,
-        speed: 0.2
-    },
-    walk: {
-        startFrame: 4,
-        endFrame: 12,
-        speed: 0.15
-    },
-    attack: {
-        startFrame: 12,
-        endFrame: 20,
-        speed: 0.11
-    },
-    die: {
-        startFrame: 20,
-        endFrame: 28,
-        speed: 0.2
-    },
-    shoot: {
-        startFrame: 28,
-        endFrame: 32,
-        speed: 0.1
-    }
-};
-let scene = null;
-
-
 let slime = "";
 let timer = 0;
+const healthbar = 100;
 
 function preload () {
     // preload images, sounds & other assets
@@ -97,7 +59,7 @@ function create () {
 
     // Add organism to scene (full spritesheet) -- .setBounce(10).setFriction(0)
     this.slime = this.physics.add.sprite(400, 330,'slime', 'slime-05.png');
-
+    // label(this.slime)
 
     // Create animations
     this.anims.create({
@@ -120,7 +82,7 @@ function create () {
     })
     this.anims.create({
         key: 'west',
-        frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: 09, end: 12, suffix: '.png'}),
+        frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: 9, end: 12, suffix: '.png'}),
         frameRate:15,
         repeat: -1
     })
@@ -140,18 +102,15 @@ function create () {
     //scale organism
     // Phaser.Actions.ScaleXY(this.organisms.getChildren(), -0.10,-0.10);
 
-    // Set speed
+    // Takes an array of objects and passes each of them to the given callback.
     Phaser.Actions.Call(this.organisms.getChildren(), function(organism) {
         organism.speed = Math.random() * 2 + 1;
         // make item interactive
         organism.setInteractive();
 
-        // this.physics.add.collider(organism, treeLayer);
-        // this.physics.add.collider(organism, waterLayer);
-        
     }, this);
 
-    locations = this.add.text(16, 16, 'location: 0, 0', { fontSize: '10px', fill: '#000' })
+    let locations = this.add.text(16, 16, 'location: 0, 0', { fontSize: '10px', fill: '#000' })
     this.orgLocations = this.add.group({
         //
     })
@@ -168,6 +127,7 @@ function create () {
     this.physics.add.collider(this.organisms, treeLayer);
     this.physics.add.collider(this.organisms, waterLayer);
     this.physics.add.collider(this.organisms);
+    
     // Specify property
     treeLayer.setCollisionByProperty({collide:true});
     waterLayer.setCollisionByProperty({collide:true});
@@ -208,8 +168,6 @@ function update () {
                 }
             }
 
-            
-
 
                 if (organisms[i].y >= 599) {
                     organisms[i].setVelocityY(-64)
@@ -242,16 +200,18 @@ function update () {
 }; 
 
 function randomMovement(obj) {
-    d = Math.random();
-    if (d < 1 && d > 0.98) {
-        obj.setVelocityY(64);
-    } else if (d < 0.98 && d > 0.96) {
-        obj.setVelocityY(-64);
-    } else if (d < 0.96 && d > 0.94) {
-        obj.setVelocityX(64);
-    } else if (d < 0.94 && d > 0.92) {
-        obj.setVelocityX(-64);
-    }
+    //if (obj.body.velocity.x !== 0 && obj.body.velocity.y !== 0) {
+        const d = Math.random();
+        if (d < 1 && d > 0.98) {
+            obj.setVelocityY(64);
+        } else if (d < 0.98 && d > 0.96) {
+            obj.setVelocityY(-64);
+        } else if (d < 0.96 && d > 0.94) {
+            obj.setVelocityX(64);
+        } else if (d < 0.94 && d > 0.92) {
+            obj.setVelocityX(-64);
+        }
+    //}
 };
 
 
@@ -271,3 +231,11 @@ function movementAnim(obj) {
     }
 
 }
+
+// function label(obj) {
+//     const style = { font: "10px Arial", fill: "#ffffff"};
+//     obj.label_score = this.add.text(20, 20, "0", style);
+//     obj.hello_sprite.addChild(this.label_score)
+// }
+
+//locations = this.add.text(16, 16, 'location: 0, 0', { fontSize: '10px', fill: '#000' })

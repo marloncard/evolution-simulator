@@ -5,7 +5,7 @@ Date: July 03, 2019
 */
 
 
-class Organism {
+export default class Life {
 
     constructor(speed, metabolism, permiscuity, orgName) {
         this.speed = speed
@@ -36,3 +36,4 @@ class Organism {
         // Increased by speed
     }
 }
+

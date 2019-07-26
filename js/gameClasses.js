@@ -16,3 +16,5 @@ const Slime = new Phaser.Class({
         this.direction = directions[direction];
     }
 })
+
+export default Slime;
