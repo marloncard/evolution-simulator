@@ -36,8 +36,7 @@ export class LoadScene extends Phaser.Scene {
         //this.load.spritesheet("slime", "./assets/sprite/slime.png", {frameHeight: 16, frameWidth: 16});
         //load atlases
         this.load.atlas("slime", "./assets/sprite/slime.png", "./assets/sprite/slime.json")
-        this.load.image('tileset', 'assets/sprite/overworld_tileset_grass.png');
-        this.load.tilemapTiledJSON('map', 'assets/sprite/evo-tileset.json');
+
         this.loadSprites({
             frameHeight: 16,
             frameWidth: 16

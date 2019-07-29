@@ -10,7 +10,7 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0, 0);
         scene.physics.world.enableBody(this);
         
-        this.hp = 1000;
+        this.hp = 100;
         this.speed = 10;
         this.age = 0;
 

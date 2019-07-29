@@ -9,6 +9,7 @@ export class PlayScene extends Phaser.Scene {
          });
     }
     preload() {
+
     // Create animations
     this.anims.create({
         key: 'idle',
@@ -34,9 +35,28 @@ export class PlayScene extends Phaser.Scene {
         frameRate:15,
         repeat: -1
     })
+    // Load map tiles
+    this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
+    this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json');
+
+    // Ouput files loaded to console
+    this.load.on("load", (file) => {
+        console.log(file.src)
+    })
+    
     }
     create() {
-        
+        //const map = this.make.tilemap({ key: 'map'});
+        let map = this.add.tilemap('map');
+        //const tileset = map.addTilesetImage('evo-default', 'tileset');
+        let tileset = map.addTilesetImage('evo-default', 'tileset')
+
+        // Layers
+        let baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
+        let treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+        let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
+        //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+
         let gameTime = 0;
         //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
@@ -73,12 +93,29 @@ export class PlayScene extends Phaser.Scene {
         // }
         slime.setCollideWorldBounds(true);
 
+        let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '10px', fill: '#fff' })
         let timer = this.time.addEvent({
             delay:1000,
-            callback: () => {gameTime++; console.log(gameTime);},
+            callback: () => {gameTime++; timerText.setText('Timer: ' + gameTime);},
             callbackScope: this,
             repeat: -1
-        })
+        });
+        
+        let orgText = this.add.text(16, 100,'Slime List: ', { fontSize: '10px', fill: '#fff' } ).setDepth(10);
+
+        // Map Collisions
+        this.physics.add.collider(slime, treeLayer);
+        this.physics.add.collider(slime, waterLayer);
+
+        this.physics.add.collider(this.organisms, treeLayer);
+        this.physics.add.collider(this.organisms, waterLayer);
+        this.physics.add.collider(this.organisms);
+
+        // Specify property
+        treeLayer.setCollisionByProperty({collide:true});
+        waterLayer.setCollisionByProperty({collide:true});
+
+        //treeLayer.renderDebug(this.add.graphics)
          /*
         gameobject events:
             animationstart
@@ -86,21 +123,19 @@ export class PlayScene extends Phaser.Scene {
             animationupdate
             animationcomplete
         */
-    //    slime.on("animationupdate", () => {
-    //        console.log("ahhhhh")
-    //    });
-    //    slime.on("animationupdate", () => {
-    //     console.log("LEVELUP")
-    // });
+        //    slime.on("animationupdate", () => {
+        //        console.log("ahhhhh")
+        //    });
+        //    slime.on("animationupdate", () => {
+        //     console.log("LEVELUP")
+        // });
 
-
-    
     }
     update(time, delta) { //delta 16.666 @ 60fps -- delta is fps in milliseconds
         // this.physics.world.collide(slime, slime, (slime) => {
         //     slime.destroy();
         // })
-
+        this.timerText;
         this.movementAnim(slime);
         this.randomMovement(slime);
 
@@ -176,9 +211,13 @@ export class PlayScene extends Phaser.Scene {
                     obj.setVelocity(0,0);
                 }
             }
-
+       
     };
 
+    onEvent() {
+        this.timerText.setText('Timer: ' + this.gameTime);
+        console.log(this.gameTime)
+    }
 
 }
 

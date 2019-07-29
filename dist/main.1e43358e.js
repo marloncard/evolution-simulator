@@ -223,8 +223,6 @@ function (_Phaser$Scene) {
       //this.load.spritesheet("slime", "./assets/sprite/slime.png", {frameHeight: 16, frameWidth: 16});
       //load atlases
       this.load.atlas("slime", "./assets/sprite/slime.png", "./assets/sprite/slime.json");
-      this.load.image('tileset', 'assets/sprite/overworld_tileset_grass.png');
-      this.load.tilemapTiledJSON('map', 'assets/sprite/evo-tileset.json');
       this.loadSprites({
         frameHeight: 16,
         frameWidth: 16
@@ -412,7 +410,7 @@ function (_Phaser$Physics$Arcad) {
     _this.setOrigin(0, 0);
 
     scene.physics.world.enableBody(_assertThisInitialized(_this));
-    _this.hp = 1000;
+    _this.hp = 2000;
     _this.speed = 10;
     _this.age = 0;
     return _this;
@@ -536,11 +534,27 @@ function (_Phaser$Scene) {
         }),
         frameRate: 15,
         repeat: -1
+      }); // Load map tiles
+
+      this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
+      this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json'); // Ouput files loaded to console
+
+      this.load.on("load", function (file) {
+        console.log(file.src);
       });
     }
   }, {
     key: "create",
     value: function create() {
+      //const map = this.make.tilemap({ key: 'map'});
+      var map = this.add.tilemap('map'); //const tileset = map.addTilesetImage('evo-default', 'tileset');
+
+      var tileset = map.addTilesetImage('evo-default', 'tileset'); // Layers
+
+      var baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
+      var treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+      var waterLayer = map.createStaticLayer("Water", tileset, 0, 0); //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+
       var gameTime = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
       var slime = new _Sprite.Sprite(this, 100, 100, _CST.CST.SPRITE.SLIME); //this.physics.add.existing() //manual add
@@ -572,15 +586,37 @@ function (_Phaser$Scene) {
       // }
 
       slime.setCollideWorldBounds(true);
+      var timerText = this.add.text(16, 16, 'Timer: ' + 0, {
+        fontSize: '10px',
+        fill: '#fff'
+      });
       var timer = this.time.addEvent({
         delay: 1000,
         callback: function callback() {
           gameTime++;
-          console.log(gameTime);
+          timerText.setText('Timer: ' + gameTime);
         },
         callbackScope: this,
         repeat: -1
       });
+      var orgText = this.add.text(16, 100, 'Slime List: ', {
+        fontSize: '10px',
+        fill: '#fff'
+      }).setDepth(10); // Map Collisions
+
+      this.physics.add.collider(slime, treeLayer);
+      this.physics.add.collider(slime, waterLayer);
+      this.physics.add.collider(this.organisms, treeLayer);
+      this.physics.add.collider(this.organisms, waterLayer);
+      this.physics.add.collider(this.organisms); // Specify property
+
+      treeLayer.setCollisionByProperty({
+        collide: true
+      });
+      waterLayer.setCollisionByProperty({
+        collide: true
+      }); //treeLayer.renderDebug(this.add.graphics)
+
       /*
       gameobject events:
          animationstart
@@ -602,6 +638,7 @@ function (_Phaser$Scene) {
       // this.physics.world.collide(slime, slime, (slime) => {
       //     slime.destroy();
       // })
+      this.timerText;
       this.movementAnim(slime);
       this.randomMovement(slime);
       var organisms = this.organisms.getChildren(); // apply collision to group
@@ -676,6 +713,12 @@ function (_Phaser$Scene) {
         }
       }
     }
+  }, {
+    key: "onEvent",
+    value: function onEvent() {
+      this.timerText.setText('Timer: ' + this.gameTime);
+      console.log(this.gameTime);
+    }
   }]);
 
   return PlayScene;
@@ -746,14 +789,10 @@ function preload () {
     this.load.spritesheet('slime_explode', 'assets/slime_explode.png', {frameWidth: 16, frameHeight: 16})
 };
 function create () {
-    const map = this.make.tilemap({ key: 'map'});
-    const tileset = map.addTilesetImage('evo-default', 'tileset')
+
 
     // Layers
-    const baseLayer = map.createStaticLayer("Base", tileset, 0, 0);
-    const treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
-    const waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
-    const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0);
+
 
     // Add organism to scene (full spritesheet) -- .setBounce(10).setFriction(0)
     this.slime = this.physics.add.sprite(400, 330,'slime', 'slime-05.png');
@@ -818,17 +857,9 @@ function create () {
     this.physics.world.bounds.height = map.heightInPixels-10;
     this.slime.setCollideWorldBounds(true);
 
-    // Map Collisions
-    this.physics.add.collider(this.slime, treeLayer);
-    this.physics.add.collider(this.slime, waterLayer);
 
-    this.physics.add.collider(this.organisms, treeLayer);
-    this.physics.add.collider(this.organisms, waterLayer);
-    this.physics.add.collider(this.organisms);
     
-    // Specify property
-    treeLayer.setCollisionByProperty({collide:true});
-    waterLayer.setCollisionByProperty({collide:true});
+
 
     // Collision debugging (remove in production)
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
@@ -939,7 +970,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56299" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63422" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -65,14 +65,10 @@ function preload () {
     this.load.spritesheet('slime_explode', 'assets/slime_explode.png', {frameWidth: 16, frameHeight: 16})
 };
 function create () {
-    const map = this.make.tilemap({ key: 'map'});
-    const tileset = map.addTilesetImage('evo-default', 'tileset')
+
 
     // Layers
-    const baseLayer = map.createStaticLayer("Base", tileset, 0, 0);
-    const treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
-    const waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
-    const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0);
+
 
     // Add organism to scene (full spritesheet) -- .setBounce(10).setFriction(0)
     this.slime = this.physics.add.sprite(400, 330,'slime', 'slime-05.png');
@@ -137,17 +133,9 @@ function create () {
     this.physics.world.bounds.height = map.heightInPixels-10;
     this.slime.setCollideWorldBounds(true);
 
-    // Map Collisions
-    this.physics.add.collider(this.slime, treeLayer);
-    this.physics.add.collider(this.slime, waterLayer);
 
-    this.physics.add.collider(this.organisms, treeLayer);
-    this.physics.add.collider(this.organisms, waterLayer);
-    this.physics.add.collider(this.organisms);
     
-    // Specify property
-    treeLayer.setCollisionByProperty({collide:true});
-    waterLayer.setCollisionByProperty({collide:true});
+
 
     // Collision debugging (remove in production)
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
