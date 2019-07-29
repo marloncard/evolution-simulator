@@ -8,6 +8,7 @@ export class PlayScene extends Phaser.Scene {
             key: CST.SCENES.PLAY,
          });
     }
+
     preload() {
 
     // Create animations
@@ -57,7 +58,7 @@ export class PlayScene extends Phaser.Scene {
         let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
-        let gameTime = 0;
+        this.gameTime = 0;
         //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
         let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
@@ -96,12 +97,12 @@ export class PlayScene extends Phaser.Scene {
         let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '10px', fill: '#fff' })
         let timer = this.time.addEvent({
             delay:1000,
-            callback: () => {gameTime++; timerText.setText('Timer: ' + gameTime);},
+            callback: () => {this.gameTime++; timerText.setText('Timer: ' + this.gameTime);},
             callbackScope: this,
             repeat: -1
         });
         
-        let orgText = this.add.text(16, 100,'Slime List: ', { fontSize: '10px', fill: '#fff' } ).setDepth(10);
+        let orgText = this.add.text(16, 50,'Slime List: ', { fontSize: '10px', fill: '#fff' } ).setDepth(10);
 
         // Map Collisions
         this.physics.add.collider(slime, treeLayer);
@@ -159,7 +160,7 @@ export class PlayScene extends Phaser.Scene {
             //console.log(organisms[i].hp)
             // movement
             this.movementAnim(organisms[i]);
-            organisms[i].metabolise(1)
+            organisms[i].metabolise(5, this.gameTime)
             this.randomMovement(organisms[i]);
             if (organisms[i].hp === 0) {
                 organisms[i].destroy()
@@ -214,10 +215,10 @@ export class PlayScene extends Phaser.Scene {
        
     };
 
-    onEvent() {
-        this.timerText.setText('Timer: ' + this.gameTime);
-        console.log(this.gameTime)
-    }
+    // onEvent() {
+    //     this.timerText.setText('Timer: ' + this.gameTime);
+    //     console.log(this.gameTime)
+    // }
 
 }
 

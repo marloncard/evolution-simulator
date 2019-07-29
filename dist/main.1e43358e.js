@@ -325,7 +325,7 @@ function (_Phaser$Scene) {
       var _this = this;
 
       this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0);
-      var playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, _CST.CST.IMAGE.START).setDepth(1).setScale(0.15);
+      var playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, _CST.CST.IMAGE.START).setDepth(1).setScale(0.10);
       playButton.alpha = 0.9; // // create audio
       // this.sound.pauseOnBlur = false;
       // this.sound.play("title_music", {
@@ -342,17 +342,17 @@ function (_Phaser$Scene) {
 
       playButton.setInteractive();
       playButton.on("pointerover", function () {
-        playButton.setScale(0.17);
+        playButton.setScale(0.12);
         playButton.clearAlpha();
       });
       playButton.on("pointerout", function () {
-        playButton.setScale(0.15);
+        playButton.setScale(0.10);
         playButton.alpha = 0.9; //this.scene.start();
       });
       playButton.on("pointerup", function () {
         _this.scene.start(_CST.CST.SCENES.PLAY);
 
-        playButton.setScale(0.15);
+        playButton.setScale(0.10);
         playButton.clearAlpha();
       });
     }
@@ -410,7 +410,8 @@ function (_Phaser$Physics$Arcad) {
     _this.setOrigin(0, 0);
 
     scene.physics.world.enableBody(_assertThisInitialized(_this));
-    _this.hp = 2000;
+    _this.timeArray = [];
+    _this.hp = 100;
     _this.speed = 10;
     _this.age = 0;
     return _this;
@@ -433,10 +434,14 @@ function (_Phaser$Physics$Arcad) {
     }
   }, {
     key: "metabolise",
-    value: function metabolise(rate) {
+    value: function metabolise(rate, time) {
       // Daily process which lowers health
       // Increased by speed
-      this.hp = this.hp - rate; //console.log(this.hp)
+      if (time % 2 == 0 && this.timeArray.includes(time) === false) {
+        this.timeArray.push(time);
+        this.hp = this.hp - rate;
+        console.log(this.hp + " HP Remaining");
+      }
     }
   }]);
 
@@ -546,6 +551,8 @@ function (_Phaser$Scene) {
   }, {
     key: "create",
     value: function create() {
+      var _this = this;
+
       //const map = this.make.tilemap({ key: 'map'});
       var map = this.add.tilemap('map'); //const tileset = map.addTilesetImage('evo-default', 'tileset');
 
@@ -555,7 +562,7 @@ function (_Phaser$Scene) {
       var treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
       var waterLayer = map.createStaticLayer("Water", tileset, 0, 0); //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
-      var gameTime = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
+      this.gameTime = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
       var slime = new _Sprite.Sprite(this, 100, 100, _CST.CST.SPRITE.SLIME); //this.physics.add.existing() //manual add
 
@@ -593,13 +600,13 @@ function (_Phaser$Scene) {
       var timer = this.time.addEvent({
         delay: 1000,
         callback: function callback() {
-          gameTime++;
-          timerText.setText('Timer: ' + gameTime);
+          _this.gameTime++;
+          timerText.setText('Timer: ' + _this.gameTime);
         },
         callbackScope: this,
         repeat: -1
       });
-      var orgText = this.add.text(16, 100, 'Slime List: ', {
+      var orgText = this.add.text(16, 50, 'Slime List: ', {
         fontSize: '10px',
         fill: '#fff'
       }).setDepth(10); // Map Collisions
@@ -659,7 +666,7 @@ function (_Phaser$Scene) {
         //console.log(organisms[i].hp)
         // movement
         this.movementAnim(organisms[i]);
-        organisms[i].metabolise(1);
+        organisms[i].metabolise(5, this.gameTime);
         this.randomMovement(organisms[i]);
 
         if (organisms[i].hp === 0) {
@@ -712,12 +719,6 @@ function (_Phaser$Scene) {
           obj.setVelocity(0, 0);
         }
       }
-    }
-  }, {
-    key: "onEvent",
-    value: function onEvent() {
-      this.timerText.setText('Timer: ' + this.gameTime);
-      console.log(this.gameTime);
     }
   }]);
 
@@ -970,7 +971,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63422" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60033" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

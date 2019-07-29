@@ -9,6 +9,8 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         this.setScale(1);
         this.setOrigin(0, 0);
         scene.physics.world.enableBody(this);
+
+        this.timeArray = []
         
         this.hp = 100;
         this.speed = 10;
@@ -31,11 +33,16 @@ consume(food) {
     // 80% base chance, each point of speed + 2%; 20% max
 }
 
-metabolise(rate) {
+metabolise(rate, time) {
     // Daily process which lowers health
     // Increased by speed
-    this.hp = this.hp - rate
-    //console.log(this.hp)
+
+    if (time % 2 == 0 && this.timeArray.includes(time) === false) {
+        this.timeArray.push(time);
+        this.hp = this.hp - rate
+        console.log(this.hp + " HP Remaining")
+    }
+    
 }
 
 }

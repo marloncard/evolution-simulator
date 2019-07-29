@@ -12,7 +12,7 @@ export class MenuScene extends Phaser.Scene {
     create() {
         this.add.image(0,0, CST.IMAGE.TITLE).setOrigin(0);
         
-        let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, CST.IMAGE.START).setDepth(1).setScale(0.15);
+        let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, CST.IMAGE.START).setDepth(1).setScale(0.10);
         playButton.alpha = 0.9;
 
         // // create audio
@@ -34,19 +34,19 @@ export class MenuScene extends Phaser.Scene {
         playButton.setInteractive();
 
         playButton.on("pointerover", () => {
-            playButton.setScale(0.17)
+            playButton.setScale(0.12)
             playButton.clearAlpha();
         })
 
         playButton.on("pointerout", () => {
-            playButton.setScale(0.15)
+            playButton.setScale(0.10)
             playButton.alpha = 0.9;
             //this.scene.start();
         })
 
         playButton.on("pointerup", () => {
             this.scene.start(CST.SCENES.PLAY)
-            playButton.setScale(0.15);
+            playButton.setScale(0.10);
             playButton.clearAlpha();
         })
     }
