@@ -40,6 +40,8 @@ export class PlayScene extends Phaser.Scene {
     this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
     this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json');
 
+    this.load.image('tree', './assets/image/overworld-92.png')
+
     // Ouput files loaded to console
     this.load.on("load", (file) => {
         console.log(file.src)
@@ -54,9 +56,24 @@ export class PlayScene extends Phaser.Scene {
 
         // Layers
         let baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
-        let treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+        //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
         let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+
+        this.trees = this.physics.add.group({
+            key: 'tree',
+            repeat: 12,
+            setXY: {x: 100, y: 50}
+            //setXY: {Phaser.Math.RandomXY(vec)}
+        })
+        window.trees = this.trees;
+        for (let i = 0; i < 50; i++) {
+            let x = Phaser.Math.RND.between(0, 800);
+            let y = Phaser.Math.RND.between(0, 600);
+
+            this.trees.create(x, y, 'tree')
+        }
+
 
         this.gameTime = 0;
         //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
@@ -78,6 +95,7 @@ export class PlayScene extends Phaser.Scene {
                 stepY: 0
             }
         });
+        window.organisms = this.organisms
         // this.organisms = this.physics.add.group()
         // this.organisms.add(slime)
         // Takes an array of objects and passes each of them to the given callback.
@@ -104,19 +122,40 @@ export class PlayScene extends Phaser.Scene {
         
         let orgText = this.add.text(16, 50,'Slime List: ', { fontSize: '10px', fill: '#fff' } ).setDepth(10);
 
+        // Respawn trees
+        let treeTimer = this.time.addEvent({
+            delay: 30000,
+            callback: this.regrowTrees,
+            callbackScope: this,
+            repeat: -1
+        });
+
         // Map Collisions
-        this.physics.add.collider(slime, treeLayer);
+        this.physics.add.collider(slime, this.treeLayer);
+        
         this.physics.add.collider(slime, waterLayer);
 
-        this.physics.add.collider(this.organisms, treeLayer);
+        //this.physics.add.collider(this.organisms, this.treeLayer);
+        this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
         this.physics.add.collider(this.organisms, waterLayer);
         this.physics.add.collider(this.organisms);
 
         // Specify property
-        treeLayer.setCollisionByProperty({collide:true});
+        //this.treeLayer.setCollisionByProperty({collide:true});
         waterLayer.setCollisionByProperty({collide:true});
+        
+        // Map events 
+            //by index
+        // this.treeLayer.setTileIndexCallback([96], (Sprite) => {
+        //     //console.log(Sprite.x, Sprite.y)
+        //     Sprite.hp += 10
+        // }, this)
 
-        //treeLayer.renderDebug(this.add.graphics)
+
+
+            //treeLayer.removeTileAt(tile.x, tile.y)
+
+        //this.treeLayer.renderDebug(this.add.graphics)
          /*
         gameobject events:
             animationstart
@@ -212,8 +251,21 @@ export class PlayScene extends Phaser.Scene {
                     obj.setVelocity(0,0);
                 }
             }
-       
+    }
+
+    collectTree(sprite, tree) {
+        //this.treeLayer.removeTileAt(tile.x, tile.y)
+        tree.disableBody(true, true);
+        sprite.hp += 10;
     };
+
+    regrowTrees() {
+
+        for (let tree of this.trees.getChildren()) {
+            tree.enableBody(false, tree.x, tree.y, true, true);
+            console.log("**Spring has sprung**")
+        }
+    }
 
     // onEvent() {
     //     this.timerText.setText('Timer: ' + this.gameTime);

@@ -542,7 +542,8 @@ function (_Phaser$Scene) {
       }); // Load map tiles
 
       this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
-      this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json'); // Ouput files loaded to console
+      this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json');
+      this.load.image('tree', './assets/image/overworld-92.png'); // Ouput files loaded to console
 
       this.load.on("load", function (file) {
         console.log(file.src);
@@ -558,9 +559,26 @@ function (_Phaser$Scene) {
 
       var tileset = map.addTilesetImage('evo-default', 'tileset'); // Layers
 
-      var baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
-      var treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+      var baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1); //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+
       var waterLayer = map.createStaticLayer("Water", tileset, 0, 0); //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+
+      this.trees = this.physics.add.group({
+        key: 'tree',
+        repeat: 12,
+        setXY: {
+          x: 100,
+          y: 50 //setXY: {Phaser.Math.RandomXY(vec)}
+
+        }
+      });
+      window.trees = this.trees;
+
+      for (var i = 0; i < 50; i++) {
+        var x = Phaser.Math.RND.between(0, 800);
+        var y = Phaser.Math.RND.between(0, 600);
+        this.trees.create(x, y, 'tree');
+      }
 
       this.gameTime = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
@@ -580,7 +598,8 @@ function (_Phaser$Scene) {
           stepX: 40,
           stepY: 0
         }
-      }); // this.organisms = this.physics.add.group()
+      });
+      window.organisms = this.organisms; // this.organisms = this.physics.add.group()
       // this.organisms.add(slime)
       // Takes an array of objects and passes each of them to the given callback.
 
@@ -609,20 +628,33 @@ function (_Phaser$Scene) {
       var orgText = this.add.text(16, 50, 'Slime List: ', {
         fontSize: '10px',
         fill: '#fff'
-      }).setDepth(10); // Map Collisions
+      }).setDepth(10); // Respawn trees
 
-      this.physics.add.collider(slime, treeLayer);
-      this.physics.add.collider(slime, waterLayer);
-      this.physics.add.collider(this.organisms, treeLayer);
+      var treeTimer = this.time.addEvent({
+        delay: 30000,
+        callback: this.regrowTrees,
+        callbackScope: this,
+        repeat: -1
+      }); // Map Collisions
+
+      this.physics.add.collider(slime, this.treeLayer);
+      this.physics.add.collider(slime, waterLayer); //this.physics.add.collider(this.organisms, this.treeLayer);
+
+      this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
       this.physics.add.collider(this.organisms, waterLayer);
       this.physics.add.collider(this.organisms); // Specify property
+      //this.treeLayer.setCollisionByProperty({collide:true});
 
-      treeLayer.setCollisionByProperty({
-        collide: true
-      });
       waterLayer.setCollisionByProperty({
         collide: true
-      }); //treeLayer.renderDebug(this.add.graphics)
+      }); // Map events 
+      //by index
+      // this.treeLayer.setTileIndexCallback([96], (Sprite) => {
+      //     //console.log(Sprite.x, Sprite.y)
+      //     Sprite.hp += 10
+      // }, this)
+      //treeLayer.removeTileAt(tile.x, tile.y)
+      //this.treeLayer.renderDebug(this.add.graphics)
 
       /*
       gameobject events:
@@ -720,6 +752,45 @@ function (_Phaser$Scene) {
         }
       }
     }
+  }, {
+    key: "collectTree",
+    value: function collectTree(sprite, tree) {
+      //this.treeLayer.removeTileAt(tile.x, tile.y)
+      tree.disableBody(true, true);
+      sprite.hp += 10;
+    }
+  }, {
+    key: "regrowTrees",
+    value: function regrowTrees() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.trees.getChildren()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var tree = _step.value;
+          tree.enableBody(false, tree.x, tree.y, true, true);
+          console.log("**Spring has sprung**");
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    } // onEvent() {
+    //     this.timerText.setText('Timer: ' + this.gameTime);
+    //     console.log(this.gameTime)
+    // }
+
   }]);
 
   return PlayScene;
