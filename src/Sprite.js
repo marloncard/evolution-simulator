@@ -11,22 +11,42 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         scene.physics.world.enableBody(this);
 
         this.timeArray = []
+        this.timedAgeArray = []
         
         this.vision = 30
         this.hp = 100;
         this.speed = 10;
         this.age = 0;
+        this.name = ""
 
     }
 
-senescense(loss) {
+senescense(time) {
     // Organism aging; modifies life
-    this.age += 1
+    if (time % 30 === 0 && this.timedAgeArray.includes(time) === false) {
+        this.timedAgeArray.push(time)
+        this.age += 1
+        console.log(this.name + " is now age: " + this.age)
+        this.hp -= this.age
+    }
+    
 
 }
 
-reproduce(mutationRate) {
+reproduce(nameCounter, key ) {
     // Modifies life; creates new instance of organism
+    if (this.age >= 2 && this.hp > 100) {
+        //let offspring = Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+        let offspring = organisms.create(this.x, this.y, key)
+        this.hp = this.hp / 2;
+        offspring.hp = this.hp / 2;
+        offspring.name = "Org" + nameCounter
+        return offspring;
+    } else {
+        return null;
+    }
+
+    
 }
 
 consume(food) {
@@ -38,10 +58,10 @@ metabolise(rate, time) {
     // Daily process which lowers health
     // Increased by speed
 
-    if (time % 2 == 0 && this.timeArray.includes(time) === false) {
+    if (time % 2 === 0 && this.timeArray.includes(time) === false) {
         this.timeArray.push(time);
         this.hp = this.hp - rate
-        console.log(this.hp + " HP Remaining")
+        console.log(this.hp + " HP Remaining for: " + this.name)
     }
     
 }

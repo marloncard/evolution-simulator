@@ -60,12 +60,7 @@ export class PlayScene extends Phaser.Scene {
         let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
-        this.trees = this.physics.add.group({
-            key: 'tree',
-            repeat: 1,
-            setXY: {x: 100, y: 50}
-            //setXY: {Phaser.Math.RandomXY(vec)}
-        })
+        this.trees = this.physics.add.group()
         window.trees = this.trees;
         for (let i = 0; i < 50; i++) {
             let x = Phaser.Math.RND.between(0, 800);
@@ -76,6 +71,7 @@ export class PlayScene extends Phaser.Scene {
 
 
         this.gameTime = 0;
+        this.nameCounter = 0;
         //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
         let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
@@ -84,17 +80,28 @@ export class PlayScene extends Phaser.Scene {
         slime.setInteractive().setAlpha(0.5)
         this.input.on("gameobjectdown", this.onObjectClicked);
         
-        this.organisms = this.physics.add.group({
-            classType: Sprite,
-            key: 'slime',
-            repeat: 8,
-            setXY: {
-                x: 200,
-                y: 300,
-                stepX: 40,
-                stepY: 0
-            }
-        });
+        // this.organisms = this.physics.add.group({
+        //     classType: Sprite,
+        //     key: 'slime',
+        //     repeat: 8,
+        //     setXY: {
+        //         x: 200,
+        //         y: 300,
+        //         stepX: 40,
+        //         stepY: 0
+        //     }
+        // });
+        this.organisms = this.physics.add.group({classType: Sprite})
+        for (let i = 0; i < 10; i++) {
+            let x = Phaser.Math.RND.between(100, 500);
+            let y = Phaser.Math.RND.between(100, 300);
+
+            this.organisms.create(x, y, 'slime')
+            this.organisms.getChildren()[i].name = "Org" + this.nameCounter
+            this.nameCounter++
+            
+            
+        }
         window.organisms = this.organisms
         // this.organisms = this.physics.add.group()
         // this.organisms.add(slime)
@@ -226,14 +233,20 @@ export class PlayScene extends Phaser.Scene {
             // movement
             this.movementAnim(organisms[i]);
             organisms[i].metabolise(2, this.gameTime)
+            organisms[i].senescense(this.gameTime)
+            let weeBabe = organisms[i].reproduce(this.nameCounter, Sprite)
+            if (weeBabe != null) {
+                this.organisms.create(weeBabe)
+            }
+
             if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0 ) {
                 this.randomMovement(organisms[i]);
             } else {
                 for (let tree of this.trees.getChildren()) {
                     if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
                         //organisms[i].setVelocity(0, 0)
-                        console.log(this.distanceToObject(organisms[i], tree))
-                        console.log(organisms[i].vision)
+                        //console.log(this.distanceToObject(organisms[i], tree))
+                        //console.log(organisms[i].vision)
                         this.physics.accelerateToObject(organisms[i], tree, 60, 74, 74)
                     }
                 }

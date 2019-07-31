@@ -411,22 +411,40 @@ function (_Phaser$Physics$Arcad) {
 
     scene.physics.world.enableBody(_assertThisInitialized(_this));
     _this.timeArray = [];
+    _this.timedAgeArray = [];
     _this.vision = 30;
     _this.hp = 100;
     _this.speed = 10;
     _this.age = 0;
+    _this.name = "";
     return _this;
   }
 
   _createClass(Sprite, [{
     key: "senescense",
-    value: function senescense(loss) {
+    value: function senescense(time) {
       // Organism aging; modifies life
-      this.age += 1;
+      if (time % 30 === 0 && this.timedAgeArray.includes(time) === false) {
+        this.timedAgeArray.push(time);
+        this.age += 1;
+        console.log(this.name + " is now age: " + this.age);
+        this.hp -= this.age;
+      }
     }
   }, {
     key: "reproduce",
-    value: function reproduce(mutationRate) {// Modifies life; creates new instance of organism
+    value: function reproduce(nameCounter, key) {
+      // Modifies life; creates new instance of organism
+      if (this.age >= 2 && this.hp > 100) {
+        //let offspring = Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+        var offspring = organisms.create(this.x, this.y, key);
+        this.hp = this.hp / 2;
+        offspring.hp = this.hp / 2;
+        offspring.name = "Org" + nameCounter;
+        return offspring;
+      } else {
+        return null;
+      }
     }
   }, {
     key: "consume",
@@ -438,10 +456,10 @@ function (_Phaser$Physics$Arcad) {
     value: function metabolise(rate, time) {
       // Daily process which lowers health
       // Increased by speed
-      if (time % 2 == 0 && this.timeArray.includes(time) === false) {
+      if (time % 2 === 0 && this.timeArray.includes(time) === false) {
         this.timeArray.push(time);
         this.hp = this.hp - rate;
-        console.log(this.hp + " HP Remaining");
+        console.log(this.hp + " HP Remaining for: " + this.name);
       }
     }
   }]);
@@ -564,15 +582,7 @@ function (_Phaser$Scene) {
 
       var waterLayer = map.createStaticLayer("Water", tileset, 0, 0); //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
-      this.trees = this.physics.add.group({
-        key: 'tree',
-        repeat: 1,
-        setXY: {
-          x: 100,
-          y: 50 //setXY: {Phaser.Math.RandomXY(vec)}
-
-        }
-      });
+      this.trees = this.physics.add.group();
       window.trees = this.trees;
 
       for (var i = 0; i < 50; i++) {
@@ -581,25 +591,40 @@ function (_Phaser$Scene) {
         this.trees.create(x, y, 'tree');
       }
 
-      this.gameTime = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
+      this.gameTime = 0;
+      this.nameCounter = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
       var slime = new _Sprite.Sprite(this, 100, 100, _CST.CST.SPRITE.SLIME); //this.physics.add.existing() //manual add
 
       window.slime = slime; // Add slime to window object to access from console.
 
       slime.setInteractive().setAlpha(0.5);
-      this.input.on("gameobjectdown", this.onObjectClicked);
+      this.input.on("gameobjectdown", this.onObjectClicked); // this.organisms = this.physics.add.group({
+      //     classType: Sprite,
+      //     key: 'slime',
+      //     repeat: 8,
+      //     setXY: {
+      //         x: 200,
+      //         y: 300,
+      //         stepX: 40,
+      //         stepY: 0
+      //     }
+      // });
+
       this.organisms = this.physics.add.group({
-        classType: _Sprite.Sprite,
-        key: 'slime',
-        repeat: 8,
-        setXY: {
-          x: 200,
-          y: 300,
-          stepX: 40,
-          stepY: 0
-        }
+        classType: _Sprite.Sprite
       });
+
+      for (var _i = 0; _i < 10; _i++) {
+        var _x = Phaser.Math.RND.between(100, 500);
+
+        var _y = Phaser.Math.RND.between(100, 300);
+
+        this.organisms.create(_x, _y, 'slime');
+        this.organisms.getChildren()[_i].name = "Org" + this.nameCounter;
+        this.nameCounter++;
+      }
+
       window.organisms = this.organisms; // this.organisms = this.physics.add.group()
       // this.organisms.add(slime)
       // Takes an array of objects and passes each of them to the given callback.
@@ -764,6 +789,12 @@ function (_Phaser$Scene) {
 
         this.movementAnim(organisms[i]);
         organisms[i].metabolise(2, this.gameTime);
+        organisms[i].senescense(this.gameTime);
+        var weeBabe = organisms[i].reproduce(this.nameCounter, _Sprite.Sprite);
+
+        if (weeBabe != null) {
+          this.organisms.create(weeBabe);
+        }
 
         if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0) {
           this.randomMovement(organisms[i]);
@@ -778,8 +809,8 @@ function (_Phaser$Scene) {
 
               if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
                 //organisms[i].setVelocity(0, 0)
-                console.log(this.distanceToObject(organisms[i], tree));
-                console.log(organisms[i].vision);
+                //console.log(this.distanceToObject(organisms[i], tree))
+                //console.log(organisms[i].vision)
                 this.physics.accelerateToObject(organisms[i], tree, 60, 74, 74);
               }
             }
