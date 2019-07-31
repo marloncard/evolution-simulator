@@ -62,7 +62,7 @@ export class PlayScene extends Phaser.Scene {
 
         this.trees = this.physics.add.group({
             key: 'tree',
-            repeat: 12,
+            repeat: 1,
             setXY: {x: 100, y: 50}
             //setXY: {Phaser.Math.RandomXY(vec)}
         })
@@ -106,7 +106,7 @@ export class PlayScene extends Phaser.Scene {
         
         }, this);
 
-
+        //this.body.onWorldBounds = true;
         // this.physics.arcade.collide(this.organisms), (organism) => {
         //     organism.destroy();
         // }
@@ -138,7 +138,19 @@ export class PlayScene extends Phaser.Scene {
         //this.physics.add.collider(this.organisms, this.treeLayer);
         this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
         this.physics.add.collider(this.organisms, waterLayer);
-        this.physics.add.collider(this.organisms);
+        this.physics.add.collider(this.organisms, this.organisms, ()=> {
+            for (let org of this.organisms.getChildren()) {
+                this.randomMovement(org);
+            }
+        });
+
+        this.physics.add.collider(this.organisms, this.organisms, ()=> {
+            for (let org of this.organisms.getChildren()) {
+                this.randomMovement(org);
+            }
+        });
+
+        
 
         // Specify property
         //this.treeLayer.setCollisionByProperty({collide:true});
@@ -181,7 +193,7 @@ export class PlayScene extends Phaser.Scene {
 
         let organisms = this.organisms.getChildren();
         // apply collision to group
-        this.physics.world.collide(organisms)
+        //this.physics.world.collide(organisms)
 
         // apply collision to group & slime
         this.physics.world.collide(organisms, slime, (organisms, slime)=>{
@@ -194,14 +206,18 @@ export class PlayScene extends Phaser.Scene {
     
         for (let i = 0; i < numOrganisms; i++) {
             
-            for (let tree of this.trees.getChildren()) {
-                if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
-                    //organisms[i].setVelocity(0, 0)
-                    console.log(this.distanceToObject(organisms[i], tree))
-                    console.log(organisms[i].vision)
-                    this.physics.accelerateToObject(organisms[i], tree)
-                }
+            if (organisms[i].hp <= 50) {
+                organisms[i].setScale(0.5);
+            } else if (organisms[i].hp > 50 && organisms[i].hp <= 75 ) {
+                organisms[i].setScale(0.75);
+            } else if (organisms[i].hp > 75 && organisms[i].hp <= 100 ) {
+                organisms[i].setScale(1.0);
+            } else if (organisms[i].hp > 100 && organisms[i].hp <= 125) {
+                organisms[i].setScale(1.25);
+            } else if (organisms[i].hp > 125 && organisms[i].hp <= 150) {
+                organisms[i].setScale(1.50);
             }
+            
             // if (slime.active === true) {
             //     //this.physics.accelerateToObject(organisms[i], slime)
             // }
@@ -210,7 +226,20 @@ export class PlayScene extends Phaser.Scene {
             // movement
             this.movementAnim(organisms[i]);
             organisms[i].metabolise(2, this.gameTime)
-            this.randomMovement(organisms[i]);
+            if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0 ) {
+                this.randomMovement(organisms[i]);
+            } else {
+                for (let tree of this.trees.getChildren()) {
+                    if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
+                        //organisms[i].setVelocity(0, 0)
+                        console.log(this.distanceToObject(organisms[i], tree))
+                        console.log(organisms[i].vision)
+                        this.physics.accelerateToObject(organisms[i], tree, 60, 74, 74)
+                    }
+                }
+            }
+
+
             if (organisms[i].hp === 0) {
                 organisms[i].destroy()
                 numOrganisms = organisms.length
@@ -244,19 +273,13 @@ export class PlayScene extends Phaser.Scene {
             if (obj.active === true) {
                 const d = Phaser.Math.Between(0, 1000)
                 if (d < 100 && d > 95) {
-                    obj.setVelocityY(54);
-                    //obj.anims.play('north', true);
+                    obj.setVelocityY(64);
                 } else if (d < 95 && d > 90) {
-                    obj.setVelocityY(-54);
-                    //obj.anims.play('south', true);
+                    obj.setVelocityY(-64);
                 } else if (d < 90 && d > 85) {
-                    obj.setVelocityX(54);
-                    //obj.anims.play('west', true);
-                    //obj.flipX = true;
+                    obj.setVelocityX(64);
                 } else if (d < 85 && d > 80) {
-                    obj.setVelocityX(-54);
-                    //obj.anims.play('west', true);
-                    //obj.flipX = false; 
+                    obj.setVelocityX(-64);
                 } else if (d < 80 && d > 75) {
                     obj.setVelocity(0,0);
                 }
