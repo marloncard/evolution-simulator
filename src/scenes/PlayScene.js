@@ -188,18 +188,28 @@ export class PlayScene extends Phaser.Scene {
             organisms.destroy()
             slime.destroy()
         })
+
         //console.log(slime.hp)
         let numOrganisms = organisms.length;
     
         for (let i = 0; i < numOrganisms; i++) {
-
+            
+            for (let tree of this.trees.getChildren()) {
+                if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
+                    //organisms[i].setVelocity(0, 0)
+                    console.log(this.distanceToObject(organisms[i], tree))
+                    console.log(organisms[i].vision)
+                    this.physics.accelerateToObject(organisms[i], tree)
+                }
+            }
             // if (slime.active === true) {
             //     //this.physics.accelerateToObject(organisms[i], slime)
             // }
             //console.log(organisms[i].hp)
+
             // movement
             this.movementAnim(organisms[i]);
-            organisms[i].metabolise(5, this.gameTime)
+            organisms[i].metabolise(2, this.gameTime)
             this.randomMovement(organisms[i]);
             if (organisms[i].hp === 0) {
                 organisms[i].destroy()
@@ -232,19 +242,19 @@ export class PlayScene extends Phaser.Scene {
 
     randomMovement(obj) {
             if (obj.active === true) {
-                const d = Phaser.Math.Between(0, 500)
+                const d = Phaser.Math.Between(0, 1000)
                 if (d < 100 && d > 95) {
-                    obj.setVelocityY(64);
+                    obj.setVelocityY(54);
                     //obj.anims.play('north', true);
                 } else if (d < 95 && d > 90) {
-                    obj.setVelocityY(-64);
+                    obj.setVelocityY(-54);
                     //obj.anims.play('south', true);
                 } else if (d < 90 && d > 85) {
-                    obj.setVelocityX(64);
+                    obj.setVelocityX(54);
                     //obj.anims.play('west', true);
                     //obj.flipX = true;
                 } else if (d < 85 && d > 80) {
-                    obj.setVelocityX(-64);
+                    obj.setVelocityX(-54);
                     //obj.anims.play('west', true);
                     //obj.flipX = false; 
                 } else if (d < 80 && d > 75) {
@@ -254,7 +264,6 @@ export class PlayScene extends Phaser.Scene {
     }
 
     collectTree(sprite, tree) {
-        //this.treeLayer.removeTileAt(tile.x, tile.y)
         tree.disableBody(true, true);
         sprite.hp += 10;
     };
@@ -265,12 +274,20 @@ export class PlayScene extends Phaser.Scene {
             tree.enableBody(false, tree.x, tree.y, true, true);
             console.log("**Spring has sprung**")
         }
-    }
+    };
 
+    distanceToObject(obj1, obj2) {
+        let distanceX = Math.abs(obj1.x - obj2.x)
+        let distanceY = Math.abs(obj1.y - obj2.y)
+
+        return distanceX + distanceY
+    };
+    
     // onEvent() {
     //     this.timerText.setText('Timer: ' + this.gameTime);
     //     console.log(this.gameTime)
     // }
 
-}
 
+
+}

@@ -411,6 +411,7 @@ function (_Phaser$Physics$Arcad) {
 
     scene.physics.world.enableBody(_assertThisInitialized(_this));
     _this.timeArray = [];
+    _this.vision = 30;
     _this.hp = 100;
     _this.speed = 10;
     _this.age = 0;
@@ -692,13 +693,43 @@ function (_Phaser$Scene) {
       var numOrganisms = organisms.length;
 
       for (var i = 0; i < numOrganisms; i++) {
-        // if (slime.active === true) {
-        //     //this.physics.accelerateToObject(organisms[i], slime)
-        // }
-        //console.log(organisms[i].hp)
-        // movement
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this.trees.getChildren()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var tree = _step.value;
+
+            if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
+              //organisms[i].setVelocity(0, 0)
+              console.log(this.distanceToObject(organisms[i], tree));
+              console.log(organisms[i].vision);
+              this.physics.accelerateToObject(organisms[i], tree);
+            }
+          } // if (slime.active === true) {
+          //     //this.physics.accelerateToObject(organisms[i], slime)
+          // }
+          //console.log(organisms[i].hp)
+          // movement
+
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
         this.movementAnim(organisms[i]);
-        organisms[i].metabolise(5, this.gameTime);
+        organisms[i].metabolise(2, this.gameTime);
         this.randomMovement(organisms[i]);
 
         if (organisms[i].hp === 0) {
@@ -735,17 +766,17 @@ function (_Phaser$Scene) {
     key: "randomMovement",
     value: function randomMovement(obj) {
       if (obj.active === true) {
-        var d = Phaser.Math.Between(0, 500);
+        var d = Phaser.Math.Between(0, 1000);
 
         if (d < 100 && d > 95) {
-          obj.setVelocityY(64); //obj.anims.play('north', true);
+          obj.setVelocityY(54); //obj.anims.play('north', true);
         } else if (d < 95 && d > 90) {
-          obj.setVelocityY(-64); //obj.anims.play('south', true);
+          obj.setVelocityY(-54); //obj.anims.play('south', true);
         } else if (d < 90 && d > 85) {
-          obj.setVelocityX(64); //obj.anims.play('west', true);
+          obj.setVelocityX(54); //obj.anims.play('west', true);
           //obj.flipX = true;
         } else if (d < 85 && d > 80) {
-          obj.setVelocityX(-64); //obj.anims.play('west', true);
+          obj.setVelocityX(-54); //obj.anims.play('west', true);
           //obj.flipX = false; 
         } else if (d < 80 && d > 75) {
           obj.setVelocity(0, 0);
@@ -755,42 +786,44 @@ function (_Phaser$Scene) {
   }, {
     key: "collectTree",
     value: function collectTree(sprite, tree) {
-      //this.treeLayer.removeTileAt(tile.x, tile.y)
       tree.disableBody(true, true);
       sprite.hp += 10;
     }
   }, {
     key: "regrowTrees",
     value: function regrowTrees() {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator = this.trees.getChildren()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var tree = _step.value;
+        for (var _iterator2 = this.trees.getChildren()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var tree = _step2.value;
           tree.enableBody(false, tree.x, tree.y, true, true);
           console.log("**Spring has sprung**");
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
-    } // onEvent() {
-    //     this.timerText.setText('Timer: ' + this.gameTime);
-    //     console.log(this.gameTime)
-    // }
-
+    }
+  }, {
+    key: "distanceToObject",
+    value: function distanceToObject(obj1, obj2) {
+      var distanceX = Math.abs(obj1.x - obj2.x);
+      var distanceY = Math.abs(obj1.y - obj2.y);
+      return distanceX + distanceY;
+    }
   }]);
 
   return PlayScene;
