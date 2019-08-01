@@ -412,9 +412,9 @@ function (_Phaser$Physics$Arcad) {
     scene.physics.world.enableBody(_assertThisInitialized(_this));
     _this.timeArray = [];
     _this.timedAgeArray = [];
-    _this.vision = 30;
+    _this.vision = 0;
     _this.hp = 100;
-    _this.speed = 10;
+    _this.speed = 0;
     _this.age = 0;
     _this.name = "";
     return _this;
@@ -426,8 +426,8 @@ function (_Phaser$Physics$Arcad) {
       // Organism aging; modifies life
       if (time % 30 === 0 && this.timedAgeArray.includes(time) === false) {
         this.timedAgeArray.push(time);
-        this.age += 1;
-        console.log(this.name + " is now age: " + this.age);
+        this.age += 1; //console.log(this.name + " is now age: " + this.age)
+
         this.hp -= this.age;
       }
     }
@@ -458,8 +458,7 @@ function (_Phaser$Physics$Arcad) {
       // Increased by speed
       if (time % 2 === 0 && this.timeArray.includes(time) === false) {
         this.timeArray.push(time);
-        this.hp = this.hp - rate;
-        console.log(this.hp + " HP Remaining for: " + this.name);
+        this.hp = this.hp - rate; //console.log(this.hp + " HP Remaining for: " + this.name)
       }
     }
   }]);
@@ -579,13 +578,14 @@ function (_Phaser$Scene) {
       var tileset = map.addTilesetImage('evo-default', 'tileset'); // Layers
 
       var baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1); //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
+      //let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
+      //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
-      var waterLayer = map.createStaticLayer("Water", tileset, 0, 0); //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+      this.trees = this.physics.add.group(); // Add trees group to the window object to make accessible in console
 
-      this.trees = this.physics.add.group();
-      window.trees = this.trees;
+      window.trees = this.trees; // Create n number of trees at random locations troughout hte grid;
 
-      for (var i = 0; i < 50; i++) {
+      for (var i = 0; i < 100; i++) {
         var x = Phaser.Math.RND.between(0, 800);
         var y = Phaser.Math.RND.between(0, 600);
         this.trees.create(x, y, 'tree');
@@ -599,18 +599,7 @@ function (_Phaser$Scene) {
       window.slime = slime; // Add slime to window object to access from console.
 
       slime.setInteractive().setAlpha(0.5);
-      this.input.on("gameobjectdown", this.onObjectClicked); // this.organisms = this.physics.add.group({
-      //     classType: Sprite,
-      //     key: 'slime',
-      //     repeat: 8,
-      //     setXY: {
-      //         x: 200,
-      //         y: 300,
-      //         stepX: 40,
-      //         stepY: 0
-      //     }
-      // });
-
+      this.input.on("gameobjectdown", this.onObjectClicked);
       this.organisms = this.physics.add.group({
         classType: _Sprite.Sprite
       });
@@ -622,12 +611,13 @@ function (_Phaser$Scene) {
 
         this.organisms.create(_x, _y, 'slime');
         this.organisms.getChildren()[_i].name = "Org" + this.nameCounter;
+        this.organisms.getChildren()[_i].speed = Phaser.Math.Between(0, 10);
+        this.organisms.getChildren()[_i].vision = Phaser.Math.Between(0, 30);
         this.nameCounter++;
       }
 
-      window.organisms = this.organisms; // this.organisms = this.physics.add.group()
-      // this.organisms.add(slime)
-      // Takes an array of objects and passes each of them to the given callback.
+      ;
+      window.organisms = this.organisms; // Takes an array of objects and passes each of them to the given callback.
 
       Phaser.Actions.Call(this.organisms.getChildren(), function (organism) {
         // make item interactive
@@ -652,7 +642,7 @@ function (_Phaser$Scene) {
         callbackScope: this,
         repeat: -1
       });
-      var orgText = this.add.text(16, 50, 'Slime List: ', {
+      this.orgText = this.add.text(16, 50, 'SLIME LIST:', {
         fontSize: '10px',
         fill: '#fff'
       }).setDepth(10); // Respawn trees
@@ -664,11 +654,11 @@ function (_Phaser$Scene) {
         repeat: -1
       }); // Map Collisions
 
-      this.physics.add.collider(slime, this.treeLayer);
-      this.physics.add.collider(slime, waterLayer); //this.physics.add.collider(this.organisms, this.treeLayer);
+      this.physics.add.collider(slime, this.treeLayer); //this.physics.add.collider(slime, waterLayer);
+      //this.physics.add.collider(this.organisms, this.treeLayer);
 
-      this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
-      this.physics.add.collider(this.organisms, waterLayer);
+      this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this); //this.physics.add.collider(this.organisms, waterLayer);
+
       this.physics.add.collider(this.organisms, this.organisms, function () {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -722,10 +712,8 @@ function (_Phaser$Scene) {
         }
       }); // Specify property
       //this.treeLayer.setCollisionByProperty({collide:true});
-
-      waterLayer.setCollisionByProperty({
-        collide: true
-      }); // Map events 
+      //waterLayer.setCollisionByProperty({collide:true});
+      // Map events 
       //by index
       // this.treeLayer.setTileIndexCallback([96], (Sprite) => {
       //     //console.log(Sprite.x, Sprite.y)
@@ -755,6 +743,7 @@ function (_Phaser$Scene) {
       // this.physics.world.collide(slime, slime, (slime) => {
       //     slime.destroy();
       // })
+      this.slimeOutput = [];
       this.timerText;
       this.movementAnim(slime);
       this.randomMovement(slime);
@@ -790,11 +779,9 @@ function (_Phaser$Scene) {
         this.movementAnim(organisms[i]);
         organisms[i].metabolise(2, this.gameTime);
         organisms[i].senescense(this.gameTime);
-        var weeBabe = organisms[i].reproduce(this.nameCounter, _Sprite.Sprite);
-
-        if (weeBabe != null) {
-          this.organisms.create(weeBabe);
-        }
+        this.cloneSprite(organisms[i]); // if (weeBabe != null) {
+        //     weeBabe.setInteractive();
+        // }
 
         if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0) {
           this.randomMovement(organisms[i]);
@@ -811,7 +798,7 @@ function (_Phaser$Scene) {
                 //organisms[i].setVelocity(0, 0)
                 //console.log(this.distanceToObject(organisms[i], tree))
                 //console.log(organisms[i].vision)
-                this.physics.accelerateToObject(organisms[i], tree, 60, 74, 74);
+                this.physics.accelerateToObject(organisms[i], tree, 60, 30 + organisms[i].speed, 30 + organisms[i].speed);
               }
             }
           } catch (err) {
@@ -829,12 +816,64 @@ function (_Phaser$Scene) {
             }
           }
         }
+      }
 
-        if (organisms[i].hp === 0) {
-          organisms[i].destroy();
-          numOrganisms = organisms.length;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.organisms.getChildren()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var org = _step4.value;
+
+          //Put death loops
+          if (org.hp <= 0) {
+            console.log(org.name + " is dead :( at age " + org.age);
+            org.destroy();
+            numOrganisms = organisms.length;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
         }
       }
+
+      ;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.organisms.getChildren()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var _org = _step5.value;
+          this.slimeOutput.push('Name: ' + _org.name + ' Age: ' + _org.age + ' HP: ' + Math.round(_org.hp) + ' Vision: ' + _org.vision + ' Speed: ' + _org.speed);
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+
+      this.orgText.setText(this.slimeOutput);
     }
   }, {
     key: "onObjectClicked",
@@ -864,16 +903,16 @@ function (_Phaser$Scene) {
     key: "randomMovement",
     value: function randomMovement(obj) {
       if (obj.active === true) {
-        var d = Phaser.Math.Between(0, 1000);
+        var d = Phaser.Math.Between(0, 500);
 
         if (d < 100 && d > 95) {
-          obj.setVelocityY(64);
+          obj.setVelocityY(30 + obj.speed);
         } else if (d < 95 && d > 90) {
-          obj.setVelocityY(-64);
+          obj.setVelocityY(-30) - obj.speed;
         } else if (d < 90 && d > 85) {
-          obj.setVelocityX(64);
+          obj.setVelocityX(30 + obj.speed);
         } else if (d < 85 && d > 80) {
-          obj.setVelocityX(-64);
+          obj.setVelocityX(-30 - obj.speed);
         } else if (d < 80 && d > 75) {
           obj.setVelocity(0, 0);
         }
@@ -888,27 +927,26 @@ function (_Phaser$Scene) {
   }, {
     key: "regrowTrees",
     value: function regrowTrees() {
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator4 = this.trees.getChildren()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var tree = _step4.value;
-          tree.enableBody(false, tree.x, tree.y, true, true);
-          console.log("**Spring has sprung**");
+        for (var _iterator6 = this.trees.getChildren()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var tree = _step6.value;
+          tree.enableBody(false, tree.x, tree.y, true, true); //console.log("**Spring has sprung**")
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-            _iterator4.return();
+          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+            _iterator6.return();
           }
         } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -920,6 +958,52 @@ function (_Phaser$Scene) {
       var distanceY = Math.abs(obj1.y - obj2.y);
       return distanceX + distanceY;
     }
+  }, {
+    key: "cloneSprite",
+    value: function cloneSprite(org) {
+      if (org.age >= 2 && org.hp > 100) {
+        var offspring = this.organisms.create(org.x, org.y, 'slime');
+        org.hp = org.hp / 2;
+        offspring.hp = org.hp / 2;
+        offspring.name = "Org" + this.nameCounter;
+        offspring.age = 0;
+        offspring.vision = org.vision;
+        var mutate = Math.random();
+
+        if (mutate < 0.01) {
+          if (mutate < 0.005) {
+            offspring.vision -= 1;
+            console.log("**Vision Mutation -1");
+          } else {
+            offspring.vision += 1;
+            console.log("**Vision Mutation +1");
+          }
+        }
+
+        ;
+        offspring.speed = org.speed;
+        mutate = Math.random();
+
+        if (mutate < 0.01) {
+          if (mutate < 0.005) {
+            offspring.speed -= 1;
+            console.log("**Speed Mutation -1");
+          } else {
+            offspring.speed += 1;
+            console.log("**Speed Mutation +1");
+          }
+        }
+
+        ;
+        this.nameCounter++;
+        offspring.setInteractive();
+        offspring.setCollideWorldBounds(true);
+      }
+    } // onEvent() {
+    //     this.timerText.setText('Timer: ' + this.gameTime);
+    //     console.log(this.gameTime)
+    // }
+
   }]);
 
   return PlayScene;
@@ -1171,7 +1255,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63107" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58766" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

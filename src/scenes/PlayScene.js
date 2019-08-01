@@ -57,12 +57,17 @@ export class PlayScene extends Phaser.Scene {
         // Layers
         let baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
         //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
-        let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
+        //let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
         this.trees = this.physics.add.group()
+
+        // Add trees group to the window object to make accessible in console
         window.trees = this.trees;
-        for (let i = 0; i < 50; i++) {
+
+        // Create n number of trees at random locations troughout hte grid;
+        for (let i = 0; i < 100; i++) {
+
             let x = Phaser.Math.RND.between(0, 800);
             let y = Phaser.Math.RND.between(0, 600);
 
@@ -80,17 +85,7 @@ export class PlayScene extends Phaser.Scene {
         slime.setInteractive().setAlpha(0.5)
         this.input.on("gameobjectdown", this.onObjectClicked);
         
-        // this.organisms = this.physics.add.group({
-        //     classType: Sprite,
-        //     key: 'slime',
-        //     repeat: 8,
-        //     setXY: {
-        //         x: 200,
-        //         y: 300,
-        //         stepX: 40,
-        //         stepY: 0
-        //     }
-        // });
+
         this.organisms = this.physics.add.group({classType: Sprite})
         for (let i = 0; i < 10; i++) {
             let x = Phaser.Math.RND.between(100, 500);
@@ -98,13 +93,13 @@ export class PlayScene extends Phaser.Scene {
 
             this.organisms.create(x, y, 'slime')
             this.organisms.getChildren()[i].name = "Org" + this.nameCounter
-            this.nameCounter++
-            
-            
-        }
+            this.organisms.getChildren()[i].speed = Phaser.Math.Between(0, 10)
+            this.organisms.getChildren()[i].vision = Phaser.Math.Between(0, 30)
+            this.nameCounter++ 
+        };
+
         window.organisms = this.organisms
-        // this.organisms = this.physics.add.group()
-        // this.organisms.add(slime)
+
         // Takes an array of objects and passes each of them to the given callback.
         Phaser.Actions.Call(this.organisms.getChildren(), function(organism) {
         // make item interactive
@@ -127,7 +122,7 @@ export class PlayScene extends Phaser.Scene {
             repeat: -1
         });
         
-        let orgText = this.add.text(16, 50,'Slime List: ', { fontSize: '10px', fill: '#fff' } ).setDepth(10);
+        this.orgText = this.add.text(16, 50, 'SLIME LIST:', {fontSize: '10px', fill: '#fff'}).setDepth(10);
 
         // Respawn trees
         let treeTimer = this.time.addEvent({
@@ -140,11 +135,11 @@ export class PlayScene extends Phaser.Scene {
         // Map Collisions
         this.physics.add.collider(slime, this.treeLayer);
         
-        this.physics.add.collider(slime, waterLayer);
+        //this.physics.add.collider(slime, waterLayer);
 
         //this.physics.add.collider(this.organisms, this.treeLayer);
         this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
-        this.physics.add.collider(this.organisms, waterLayer);
+        //this.physics.add.collider(this.organisms, waterLayer);
         this.physics.add.collider(this.organisms, this.organisms, ()=> {
             for (let org of this.organisms.getChildren()) {
                 this.randomMovement(org);
@@ -161,7 +156,7 @@ export class PlayScene extends Phaser.Scene {
 
         // Specify property
         //this.treeLayer.setCollisionByProperty({collide:true});
-        waterLayer.setCollisionByProperty({collide:true});
+        //waterLayer.setCollisionByProperty({collide:true});
         
         // Map events 
             //by index
@@ -194,6 +189,9 @@ export class PlayScene extends Phaser.Scene {
         // this.physics.world.collide(slime, slime, (slime) => {
         //     slime.destroy();
         // })
+
+        this.slimeOutput = []
+
         this.timerText;
         this.movementAnim(slime);
         this.randomMovement(slime);
@@ -234,10 +232,11 @@ export class PlayScene extends Phaser.Scene {
             this.movementAnim(organisms[i]);
             organisms[i].metabolise(2, this.gameTime)
             organisms[i].senescense(this.gameTime)
-            let weeBabe = organisms[i].reproduce(this.nameCounter, Sprite)
-            if (weeBabe != null) {
-                this.organisms.create(weeBabe)
-            }
+            this.cloneSprite(organisms[i])
+            // if (weeBabe != null) {
+            //     weeBabe.setInteractive();
+
+            // }
 
             if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0 ) {
                 this.randomMovement(organisms[i]);
@@ -247,19 +246,31 @@ export class PlayScene extends Phaser.Scene {
                         //organisms[i].setVelocity(0, 0)
                         //console.log(this.distanceToObject(organisms[i], tree))
                         //console.log(organisms[i].vision)
-                        this.physics.accelerateToObject(organisms[i], tree, 60, 74, 74)
+                        this.physics.accelerateToObject(organisms[i], tree, 60, 30+organisms[i].speed, 30+organisms[i].speed)
                     }
                 }
             }
 
 
-            if (organisms[i].hp === 0) {
-                organisms[i].destroy()
-                numOrganisms = organisms.length
-            }
+
         }
 
+        for (let org of this.organisms.getChildren()) {
+            //Put death loops
+            if (org.hp <= 0) {
+                console.log(org.name + " is dead :( at age " + org.age)
+                org.destroy()
+                numOrganisms = organisms.length
+            }
+        };
+
+        for (let org of this.organisms.getChildren()) {
+            this.slimeOutput.push('Name: ' + org.name + ' Age: ' + org.age + ' HP: ' + Math.round(org.hp) + ' Vision: ' + org.vision + ' Speed: ' + org.speed)
+        }
+        this.orgText.setText(this.slimeOutput);
+
     }
+
     onObjectClicked(pointer, gameObject) {
         gameObject.setScale(1.5);
     }
@@ -284,15 +295,15 @@ export class PlayScene extends Phaser.Scene {
 
     randomMovement(obj) {
             if (obj.active === true) {
-                const d = Phaser.Math.Between(0, 1000)
+                const d = Phaser.Math.Between(0, 500)
                 if (d < 100 && d > 95) {
-                    obj.setVelocityY(64);
+                    obj.setVelocityY(30+obj.speed);
                 } else if (d < 95 && d > 90) {
-                    obj.setVelocityY(-64);
+                    obj.setVelocityY(-30)-obj.speed;
                 } else if (d < 90 && d > 85) {
-                    obj.setVelocityX(64);
+                    obj.setVelocityX(30+obj.speed);
                 } else if (d < 85 && d > 80) {
-                    obj.setVelocityX(-64);
+                    obj.setVelocityX(-30-obj.speed);
                 } else if (d < 80 && d > 75) {
                     obj.setVelocity(0,0);
                 }
@@ -308,7 +319,7 @@ export class PlayScene extends Phaser.Scene {
 
         for (let tree of this.trees.getChildren()) {
             tree.enableBody(false, tree.x, tree.y, true, true);
-            console.log("**Spring has sprung**")
+            //console.log("**Spring has sprung**")
         }
     };
 
@@ -318,6 +329,42 @@ export class PlayScene extends Phaser.Scene {
 
         return distanceX + distanceY
     };
+
+    cloneSprite(org) {
+        if (org.age >= 2 && org.hp > 100) {
+            let offspring = this.organisms.create(org.x, org.y, 'slime')
+            org.hp = org.hp / 2;
+            offspring.hp = org.hp / 2;
+            offspring.name = "Org" + this.nameCounter;
+            offspring.age = 0;
+            offspring.vision = org.vision
+            let mutate = Math.random()
+            if ( mutate < 0.01) {
+                if (mutate < 0.005) {
+                    offspring.vision -= 1;
+                    console.log("**Vision Mutation -1");
+                } else {
+                    offspring.vision += 1;
+                    console.log("**Vision Mutation +1");
+                }
+            };
+            offspring.speed = org.speed
+            mutate = Math.random()
+            if ( mutate < 0.01) {
+                if (mutate < 0.005) {
+                    offspring.speed -= 1;
+                    console.log("**Speed Mutation -1");
+                } else {
+                    offspring.speed += 1;
+                    console.log("**Speed Mutation +1");
+                }
+            };
+            this.nameCounter++;
+            offspring.setInteractive()
+            offspring.setCollideWorldBounds(true);
+        }
+    }
+
     
     // onEvent() {
     //     this.timerText.setText('Timer: ' + this.gameTime);

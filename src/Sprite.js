@@ -13,9 +13,9 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         this.timeArray = []
         this.timedAgeArray = []
         
-        this.vision = 30
+        this.vision = 0
         this.hp = 100;
-        this.speed = 10;
+        this.speed = 0;
         this.age = 0;
         this.name = ""
 
@@ -26,7 +26,7 @@ senescense(time) {
     if (time % 30 === 0 && this.timedAgeArray.includes(time) === false) {
         this.timedAgeArray.push(time)
         this.age += 1
-        console.log(this.name + " is now age: " + this.age)
+        //console.log(this.name + " is now age: " + this.age)
         this.hp -= this.age
     }
     
@@ -40,7 +40,8 @@ reproduce(nameCounter, key ) {
         let offspring = organisms.create(this.x, this.y, key)
         this.hp = this.hp / 2;
         offspring.hp = this.hp / 2;
-        offspring.name = "Org" + nameCounter
+        offspring.name = "Org" + nameCounter;
+        
         return offspring;
     } else {
         return null;
@@ -61,7 +62,7 @@ metabolise(rate, time) {
     if (time % 2 === 0 && this.timeArray.includes(time) === false) {
         this.timeArray.push(time);
         this.hp = this.hp - rate
-        console.log(this.hp + " HP Remaining for: " + this.name)
+        //console.log(this.hp + " HP Remaining for: " + this.name)
     }
     
 }
