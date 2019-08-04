@@ -66,7 +66,7 @@ export class PlayScene extends Phaser.Scene {
         window.trees = this.trees;
 
         // Create n number of trees at random locations troughout hte grid;
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 120; i++) {
 
             let x = Phaser.Math.RND.between(0, 800);
             let y = Phaser.Math.RND.between(0, 600);
@@ -94,7 +94,7 @@ export class PlayScene extends Phaser.Scene {
             this.organisms.create(x, y, 'slime')
             this.organisms.getChildren()[i].name = "Org" + this.nameCounter
             this.organisms.getChildren()[i].speed = Phaser.Math.Between(0, 10)
-            this.organisms.getChildren()[i].vision = Phaser.Math.Between(0, 30)
+            this.organisms.getChildren()[i].vision = Phaser.Math.Between(0, 50)
             this.nameCounter++ 
         };
 
@@ -114,15 +114,24 @@ export class PlayScene extends Phaser.Scene {
         // }
         slime.setCollideWorldBounds(true);
 
-        let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '10px', fill: '#fff' })
+
+        // Text objects
+        let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '12px', fill: '#fff' })
         let timer = this.time.addEvent({
             delay:1000,
             callback: () => {this.gameTime++; timerText.setText('Timer: ' + this.gameTime);},
             callbackScope: this,
             repeat: -1
         });
-        
-        this.orgText = this.add.text(16, 50, 'SLIME LIST:', {fontSize: '10px', fill: '#fff'}).setDepth(10);
+        this.orgLabel = this.add.text(16, 42, 'THE LIVING', {fontSize: '13px', fill: '#000'}).setDepth(10);
+        this.orgLabel.setAlpha(0.75);
+        this.orgText = this.add.text(16, 55, '', {fontSize: '12px', fill: '#fff'}).setDepth(10);
+        this.orgText.setAlpha(0.75);
+
+        this.updateLabel = this.add.text(400, 42, 'UPDATES', {fontSize: '13px', fill: '#000'}).setDepth(10);
+        this.updateLabel.setAlpha(0.75);
+        this.updateText = this.add.text(400, 55, '', { fontSize: '12px', fill: '#fff' }).setDepth(10);
+        this.updateText.setAlpha(0.75);
 
         // Respawn trees
         let treeTimer = this.time.addEvent({
@@ -152,7 +161,13 @@ export class PlayScene extends Phaser.Scene {
             }
         });
 
-        
+        this.updateOutput = [];
+        this.timedUpdate = this.time.addEvent({
+            delay: 3000,
+            callback: () => {this.updateOutput.shift()},
+            callbackScope: this,
+            loop: true
+        });
 
         // Specify property
         //this.treeLayer.setCollisionByProperty({collide:true});
@@ -184,13 +199,15 @@ export class PlayScene extends Phaser.Scene {
         //     console.log("LEVELUP")
         // });
 
+
     }
     update(time, delta) { //delta 16.666 @ 60fps -- delta is fps in milliseconds
         // this.physics.world.collide(slime, slime, (slime) => {
         //     slime.destroy();
         // })
 
-        this.slimeOutput = []
+        this.slimeOutput = [];
+
 
         this.timerText;
         this.movementAnim(slime);
@@ -258,7 +275,8 @@ export class PlayScene extends Phaser.Scene {
         for (let org of this.organisms.getChildren()) {
             //Put death loops
             if (org.hp <= 0) {
-                console.log(org.name + " is dead :( at age " + org.age)
+                //console.log(org.name + " is dead :( at age " + org.age + "| Vision: " + org.vision + "| Speed: " + org.speed)
+                this.updateOutput.push(org.name + " died at age " + org.age)
                 org.destroy()
                 numOrganisms = organisms.length
             }
@@ -268,6 +286,10 @@ export class PlayScene extends Phaser.Scene {
             this.slimeOutput.push('Name: ' + org.name + ' Age: ' + org.age + ' HP: ' + Math.round(org.hp) + ' Vision: ' + org.vision + ' Speed: ' + org.speed)
         }
         this.orgText.setText(this.slimeOutput);
+        this.updateText.setText(this.updateOutput);
+        if(this.updateOutput.length > 8) {
+            this.updateOutput.shift()
+        }
 
     }
 
@@ -297,13 +319,13 @@ export class PlayScene extends Phaser.Scene {
             if (obj.active === true) {
                 const d = Phaser.Math.Between(0, 500)
                 if (d < 100 && d > 95) {
-                    obj.setVelocityY(30+obj.speed);
+                    obj.setVelocityY(35+obj.speed);
                 } else if (d < 95 && d > 90) {
-                    obj.setVelocityY(-30)-obj.speed;
+                    obj.setVelocityY(-35)-obj.speed;
                 } else if (d < 90 && d > 85) {
-                    obj.setVelocityX(30+obj.speed);
+                    obj.setVelocityX(35+obj.speed);
                 } else if (d < 85 && d > 80) {
-                    obj.setVelocityX(-30-obj.speed);
+                    obj.setVelocityX(-35-obj.speed);
                 } else if (d < 80 && d > 75) {
                     obj.setVelocity(0,0);
                 }
@@ -313,6 +335,9 @@ export class PlayScene extends Phaser.Scene {
     collectTree(sprite, tree) {
         tree.disableBody(true, true);
         sprite.hp += 10;
+        if (sprite.hp > 150) {
+            sprite.hp = 150;
+        }
     };
 
     regrowTrees() {
@@ -338,25 +363,30 @@ export class PlayScene extends Phaser.Scene {
             offspring.name = "Org" + this.nameCounter;
             offspring.age = 0;
             offspring.vision = org.vision
+            this.updateOutput.push(offspring.name + " was born")
             let mutate = Math.random()
-            if ( mutate < 0.01) {
-                if (mutate < 0.005) {
-                    offspring.vision -= 1;
-                    console.log("**Vision Mutation -1");
-                } else {
-                    offspring.vision += 1;
-                    console.log("**Vision Mutation +1");
+            if ( mutate < 0.20) { // 20% chance of mutation
+                if (mutate < 0.10) {
+                    offspring.vision -= 3;
+                    //console.log("**Vision Mutation -3 for " + offspring.name);
+                    this.updateOutput.push(offspring.name + ' vision mutation -3');
+                } else if (mutate > 0.10 && mutate < 0.21) {
+                    offspring.vision += 3;
+                    //console.log("**Vision Mutation +3 for " + offspring.name);
+                    this.updateOutput.push(offspring.name + ' vision mutation +3')
                 }
             };
             offspring.speed = org.speed
             mutate = Math.random()
-            if ( mutate < 0.01) {
-                if (mutate < 0.005) {
-                    offspring.speed -= 1;
-                    console.log("**Speed Mutation -1");
-                } else {
-                    offspring.speed += 1;
-                    console.log("**Speed Mutation +1");
+            if ( mutate < 0.20) { // 20% chance of mutation
+                if (mutate < 0.10) {
+                    offspring.speed -= 3;
+                    //console.log("**Speed Mutation -3 for " + offspring.name);
+                    this.updateOutput.push(offspring.name + ' speed mutation -3');
+                } else if (mutate > 0.10 && mutate < 0.21) {
+                    offspring.speed += 3;
+                    //console.log("**Speed Mutation +3 for " + offspring.name);
+                    this.updateOutput.push(offspring.name + ' speed mutation +3');
                 }
             };
             this.nameCounter++;
@@ -366,10 +396,7 @@ export class PlayScene extends Phaser.Scene {
     }
 
     
-    // onEvent() {
-    //     this.timerText.setText('Timer: ' + this.gameTime);
-    //     console.log(this.gameTime)
-    // }
+
 
 
 

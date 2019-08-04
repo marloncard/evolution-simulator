@@ -14,6 +14,7 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         this.timedAgeArray = []
         
         this.vision = 0
+        this.maxHP = 150;
         this.hp = 100;
         this.speed = 0;
         this.age = 0;
@@ -28,6 +29,7 @@ senescense(time) {
         this.age += 1
         //console.log(this.name + " is now age: " + this.age)
         this.hp -= this.age
+        this.maxHP -=5
     }
     
 
