@@ -412,6 +412,7 @@ function (_Phaser$Physics$Arcad) {
     scene.physics.world.enableBody(_assertThisInitialized(_this));
     _this.timeArray = [];
     _this.timedAgeArray = [];
+    _this.generation = 1;
     _this.vision = 0;
     _this.maxHP = 150;
     _this.hp = 100;
@@ -429,8 +430,12 @@ function (_Phaser$Physics$Arcad) {
         this.timedAgeArray.push(time);
         this.age += 1; //console.log(this.name + " is now age: " + this.age)
 
-        this.hp -= this.age;
-        this.maxHP -= 5;
+        this.hp -= this.age; //this.maxHP -=5
+        // Lose 5 max health per "year" after age 5
+
+        if (this.age > 5) {
+          this.maxHP -= 10;
+        }
       }
     }
   }, {
@@ -613,7 +618,7 @@ function (_Phaser$Scene) {
 
         this.organisms.create(_x, _y, 'slime');
         this.organisms.getChildren()[_i].name = "Org" + this.nameCounter;
-        this.organisms.getChildren()[_i].speed = Phaser.Math.Between(0, 10);
+        this.organisms.getChildren()[_i].speed = Phaser.Math.Between(0, 20);
         this.organisms.getChildren()[_i].vision = Phaser.Math.Between(0, 50);
         this.nameCounter++;
       }
@@ -844,7 +849,8 @@ function (_Phaser$Scene) {
             }
           }
         }
-      }
+      } // Death loop
+
 
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
@@ -854,7 +860,6 @@ function (_Phaser$Scene) {
         for (var _iterator4 = this.organisms.getChildren()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
           var org = _step4.value;
 
-          //Put death loops
           if (org.hp <= 0) {
             //console.log(org.name + " is dead :( at age " + org.age + "| Vision: " + org.vision + "| Speed: " + org.speed)
             this.updateOutput.push(org.name + " died at age " + org.age);
@@ -877,7 +882,8 @@ function (_Phaser$Scene) {
         }
       }
 
-      ;
+      ; // Update Organism list
+
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
@@ -885,7 +891,7 @@ function (_Phaser$Scene) {
       try {
         for (var _iterator5 = this.organisms.getChildren()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var _org = _step5.value;
-          this.slimeOutput.push('Name: ' + _org.name + ' Age: ' + _org.age + ' HP: ' + Math.round(_org.hp) + ' Vision: ' + _org.vision + ' Speed: ' + _org.speed);
+          this.slimeOutput.push(_org.name + ' Age: ' + _org.age + ' Gen: ' + _org.generation + ' HP: ' + Math.round(_org.hp) + ' Vision: ' + _org.vision + ' Speed: ' + _org.speed);
         }
       } catch (err) {
         _didIteratorError5 = true;
@@ -908,6 +914,8 @@ function (_Phaser$Scene) {
       if (this.updateOutput.length > 8) {
         this.updateOutput.shift();
       }
+
+      this.colorSlimes();
     }
   }, {
     key: "onObjectClicked",
@@ -997,6 +1005,38 @@ function (_Phaser$Scene) {
       return distanceX + distanceY;
     }
   }, {
+    key: "colorSlimes",
+    value: function colorSlimes() {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = this.organisms.getChildren()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var org = _step7.value;
+
+          if (org.speed > 9 && org.speed < 20) {
+            org.setTint(0xff0000, 0xffe600, 0xffe600, 0xffe600);
+          } else if (org.speed > 19) {
+            org.setTint(0xf75482);
+          }
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
+    }
+  }, {
     key: "cloneSprite",
     value: function cloneSprite(org) {
       if (org.age >= 2 && org.hp > 100) {
@@ -1006,6 +1046,7 @@ function (_Phaser$Scene) {
         offspring.name = "Org" + this.nameCounter;
         offspring.age = 0;
         offspring.vision = org.vision;
+        offspring.generation = org.generation + 1;
         this.updateOutput.push(offspring.name + " was born");
         var mutate = Math.random();
 
@@ -1295,7 +1336,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58766" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54112" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

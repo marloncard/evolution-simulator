@@ -93,7 +93,7 @@ export class PlayScene extends Phaser.Scene {
 
             this.organisms.create(x, y, 'slime')
             this.organisms.getChildren()[i].name = "Org" + this.nameCounter
-            this.organisms.getChildren()[i].speed = Phaser.Math.Between(0, 10)
+            this.organisms.getChildren()[i].speed = Phaser.Math.Between(0, 20)
             this.organisms.getChildren()[i].vision = Phaser.Math.Between(0, 50)
             this.nameCounter++ 
         };
@@ -268,12 +268,10 @@ export class PlayScene extends Phaser.Scene {
                 }
             }
 
-
-
         }
 
+        // Death loop
         for (let org of this.organisms.getChildren()) {
-            //Put death loops
             if (org.hp <= 0) {
                 //console.log(org.name + " is dead :( at age " + org.age + "| Vision: " + org.vision + "| Speed: " + org.speed)
                 this.updateOutput.push(org.name + " died at age " + org.age)
@@ -282,14 +280,16 @@ export class PlayScene extends Phaser.Scene {
             }
         };
 
+        // Update Organism list
         for (let org of this.organisms.getChildren()) {
-            this.slimeOutput.push('Name: ' + org.name + ' Age: ' + org.age + ' HP: ' + Math.round(org.hp) + ' Vision: ' + org.vision + ' Speed: ' + org.speed)
+            this.slimeOutput.push(org.name + ' Age: ' + org.age  + ' Gen: ' + org.generation + ' HP: ' + Math.round(org.hp) + ' Vision: ' + org.vision + ' Speed: ' + org.speed)
         }
         this.orgText.setText(this.slimeOutput);
         this.updateText.setText(this.updateOutput);
         if(this.updateOutput.length > 8) {
             this.updateOutput.shift()
         }
+        this.colorSlimes()
 
     }
 
@@ -355,6 +355,16 @@ export class PlayScene extends Phaser.Scene {
         return distanceX + distanceY
     };
 
+    colorSlimes() {
+        for (let org of this.organisms.getChildren()) {
+            if (org.speed > 9 && org.speed < 20) {
+                org.setTint(0xff0000,0xffe600,0xffe600,0xffe600);
+            } else if (org.speed > 19) {
+                org.setTint(0xf75482)
+            }
+        }
+    }
+
     cloneSprite(org) {
         if (org.age >= 2 && org.hp > 100) {
             let offspring = this.organisms.create(org.x, org.y, 'slime')
@@ -363,6 +373,7 @@ export class PlayScene extends Phaser.Scene {
             offspring.name = "Org" + this.nameCounter;
             offspring.age = 0;
             offspring.vision = org.vision
+            offspring.generation = org.generation + 1;
             this.updateOutput.push(offspring.name + " was born")
             let mutate = Math.random()
             if ( mutate < 0.20) { // 20% chance of mutation

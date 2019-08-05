@@ -10,8 +10,9 @@ export class Sprite extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0, 0);
         scene.physics.world.enableBody(this);
 
-        this.timeArray = []
-        this.timedAgeArray = []
+        this.timeArray = [];
+        this.timedAgeArray = [];
+        this.generation = 1;
         
         this.vision = 0
         this.maxHP = 150;
@@ -29,10 +30,13 @@ senescense(time) {
         this.age += 1
         //console.log(this.name + " is now age: " + this.age)
         this.hp -= this.age
-        this.maxHP -=5
-    }
-    
+        //this.maxHP -=5
 
+        // Lose 5 max health per "year" after age 5
+        if (this.age > 5) {
+            this.maxHP -= 10
+        }
+    }
 }
 
 reproduce(nameCounter, key ) {
