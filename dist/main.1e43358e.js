@@ -600,13 +600,12 @@ function (_Phaser$Scene) {
 
       this.gameTime = 0;
       this.nameCounter = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
+      //let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
+      //this.physics.add.existing() //manual add
+      //window.slime = slime; // Add slime to window object to access from console.
+      //slime.setInteractive().setAlpha(0.5)
+      //this.input.on("gameobjectdown", this.onObjectClicked);
 
-      var slime = new _Sprite.Sprite(this, 100, 100, _CST.CST.SPRITE.SLIME); //this.physics.add.existing() //manual add
-
-      window.slime = slime; // Add slime to window object to access from console.
-
-      slime.setInteractive().setAlpha(0.5);
-      this.input.on("gameobjectdown", this.onObjectClicked);
       this.organisms = this.physics.add.group({
         classType: _Sprite.Sprite
       });
@@ -629,13 +628,14 @@ function (_Phaser$Scene) {
       Phaser.Actions.Call(this.organisms.getChildren(), function (organism) {
         // make item interactive
         organism.setInteractive();
+        organism.setBounce(0.5, 0.5);
         organism.setCollideWorldBounds(true);
       }, this); //this.body.onWorldBounds = true;
       // this.physics.arcade.collide(this.organisms), (organism) => {
       //     organism.destroy();
       // }
-
-      slime.setCollideWorldBounds(true); // Text objects
+      //slime.setCollideWorldBounds(true);
+      // Text objects
 
       var timerText = this.add.text(16, 16, 'Timer: ' + 0, {
         fontSize: '12px',
@@ -677,8 +677,8 @@ function (_Phaser$Scene) {
         callbackScope: this,
         repeat: -1
       }); // Map Collisions
-
-      this.physics.add.collider(slime, this.treeLayer); //this.physics.add.collider(slime, waterLayer);
+      //this.physics.add.collider(slime, this.treeLayer);
+      //this.physics.add.collider(slime, waterLayer);
       //this.physics.add.collider(this.organisms, this.treeLayer);
 
       this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this); //this.physics.add.collider(this.organisms, waterLayer);
@@ -708,33 +708,12 @@ function (_Phaser$Scene) {
             }
           }
         }
-      });
-      this.physics.add.collider(this.organisms, this.organisms, function () {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+      }); // this.physics.add.collider(this.organisms, this.organisms, ()=> {
+      //     for (let org of this.organisms.getChildren()) {
+      //         this.randomMovement(org);
+      //     }
+      // });
 
-        try {
-          for (var _iterator2 = _this.organisms.getChildren()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var org = _step2.value;
-
-            _this.randomMovement(org);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-      });
       this.updateOutput = [];
       this.timedUpdate = this.time.addEvent({
         delay: 3000,
@@ -777,17 +756,17 @@ function (_Phaser$Scene) {
       //     slime.destroy();
       // })
       this.slimeOutput = [];
-      this.timerText;
-      this.movementAnim(slime);
-      this.randomMovement(slime);
+      this.timerText; // this.movementAnim(slime);
+      // this.randomMovement(slime);
+
       var organisms = this.organisms.getChildren(); // apply collision to group
       //this.physics.world.collide(organisms)
       // apply collision to group & slime
-
-      this.physics.world.collide(organisms, slime, function (organisms, slime) {
-        organisms.destroy();
-        slime.destroy();
-      }); //console.log(slime.hp)
+      // this.physics.world.collide(organisms, slime, (organisms, slime)=>{
+      //     organisms.destroy()
+      //     slime.destroy()
+      // })
+      //console.log(slime.hp)
 
       var numOrganisms = organisms.length;
 
@@ -819,13 +798,13 @@ function (_Phaser$Scene) {
         if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0) {
           this.randomMovement(organisms[i]);
         } else {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator3 = this.trees.getChildren()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var tree = _step3.value;
+            for (var _iterator2 = this.trees.getChildren()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var tree = _step2.value;
 
               if (this.distanceToObject(organisms[i], tree) <= organisms[i].vision && tree.visible) {
                 //organisms[i].setVelocity(0, 0)
@@ -835,16 +814,16 @@ function (_Phaser$Scene) {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -852,13 +831,13 @@ function (_Phaser$Scene) {
       } // Death loop
 
 
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator4 = this.organisms.getChildren()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var org = _step4.value;
+        for (var _iterator3 = this.organisms.getChildren()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var org = _step3.value;
 
           if (org.hp <= 0) {
             //console.log(org.name + " is dead :( at age " + org.age + "| Vision: " + org.vision + "| Speed: " + org.speed)
@@ -866,6 +845,32 @@ function (_Phaser$Scene) {
             org.destroy();
             numOrganisms = organisms.length;
           }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      ; // Update Organism list
+
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.organisms.getChildren()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var _org = _step4.value;
+          this.slimeOutput.push(_org.name + ' Age: ' + _org.age + ' Gen: ' + _org.generation + ' HP: ' + Math.round(_org.hp) + ' Vision: ' + _org.vision + ' Speed: ' + _org.speed);
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -878,32 +883,6 @@ function (_Phaser$Scene) {
         } finally {
           if (_didIteratorError4) {
             throw _iteratorError4;
-          }
-        }
-      }
-
-      ; // Update Organism list
-
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
-
-      try {
-        for (var _iterator5 = this.organisms.getChildren()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var _org = _step5.value;
-          this.slimeOutput.push(_org.name + ' Age: ' + _org.age + ' Gen: ' + _org.generation + ' HP: ' + Math.round(_org.hp) + ' Vision: ' + _org.vision + ' Speed: ' + _org.speed);
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
           }
         }
       }
@@ -973,26 +952,26 @@ function (_Phaser$Scene) {
   }, {
     key: "regrowTrees",
     value: function regrowTrees() {
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator6 = this.trees.getChildren()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var tree = _step6.value;
+        for (var _iterator5 = this.trees.getChildren()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var tree = _step5.value;
           tree.enableBody(false, tree.x, tree.y, true, true); //console.log("**Spring has sprung**")
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -1007,13 +986,13 @@ function (_Phaser$Scene) {
   }, {
     key: "colorSlimes",
     value: function colorSlimes() {
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator7 = this.organisms.getChildren()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var org = _step7.value;
+        for (var _iterator6 = this.organisms.getChildren()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var org = _step6.value;
 
           if (org.speed > 9 && org.speed < 20) {
             org.setTint(0xff0000, 0xffe600, 0xffe600, 0xffe600);
@@ -1022,16 +1001,16 @@ function (_Phaser$Scene) {
           }
         }
       } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+            _iterator6.return();
           }
         } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -1336,7 +1315,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54112" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59984" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

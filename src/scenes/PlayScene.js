@@ -79,11 +79,11 @@ export class PlayScene extends Phaser.Scene {
         this.nameCounter = 0;
         //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
 
-        let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
+        //let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
         //this.physics.add.existing() //manual add
-        window.slime = slime; // Add slime to window object to access from console.
-        slime.setInteractive().setAlpha(0.5)
-        this.input.on("gameobjectdown", this.onObjectClicked);
+        //window.slime = slime; // Add slime to window object to access from console.
+        //slime.setInteractive().setAlpha(0.5)
+        //this.input.on("gameobjectdown", this.onObjectClicked);
         
 
         this.organisms = this.physics.add.group({classType: Sprite})
@@ -104,6 +104,7 @@ export class PlayScene extends Phaser.Scene {
         Phaser.Actions.Call(this.organisms.getChildren(), function(organism) {
         // make item interactive
         organism.setInteractive();
+        organism.setBounce(0.5,0.5)
         organism.setCollideWorldBounds(true);
         
         }, this);
@@ -112,7 +113,7 @@ export class PlayScene extends Phaser.Scene {
         // this.physics.arcade.collide(this.organisms), (organism) => {
         //     organism.destroy();
         // }
-        slime.setCollideWorldBounds(true);
+        //slime.setCollideWorldBounds(true);
 
 
         // Text objects
@@ -142,10 +143,8 @@ export class PlayScene extends Phaser.Scene {
         });
 
         // Map Collisions
-        this.physics.add.collider(slime, this.treeLayer);
-        
+        //this.physics.add.collider(slime, this.treeLayer);
         //this.physics.add.collider(slime, waterLayer);
-
         //this.physics.add.collider(this.organisms, this.treeLayer);
         this.physics.add.overlap(this.organisms, this.trees, this.collectTree, null, this);
         //this.physics.add.collider(this.organisms, waterLayer);
@@ -155,11 +154,11 @@ export class PlayScene extends Phaser.Scene {
             }
         });
 
-        this.physics.add.collider(this.organisms, this.organisms, ()=> {
-            for (let org of this.organisms.getChildren()) {
-                this.randomMovement(org);
-            }
-        });
+        // this.physics.add.collider(this.organisms, this.organisms, ()=> {
+        //     for (let org of this.organisms.getChildren()) {
+        //         this.randomMovement(org);
+        //     }
+        // });
 
         this.updateOutput = [];
         this.timedUpdate = this.time.addEvent({
@@ -210,18 +209,18 @@ export class PlayScene extends Phaser.Scene {
 
 
         this.timerText;
-        this.movementAnim(slime);
-        this.randomMovement(slime);
+        // this.movementAnim(slime);
+        // this.randomMovement(slime);
 
         let organisms = this.organisms.getChildren();
         // apply collision to group
         //this.physics.world.collide(organisms)
 
         // apply collision to group & slime
-        this.physics.world.collide(organisms, slime, (organisms, slime)=>{
-            organisms.destroy()
-            slime.destroy()
-        })
+        // this.physics.world.collide(organisms, slime, (organisms, slime)=>{
+        //     organisms.destroy()
+        //     slime.destroy()
+        // })
 
         //console.log(slime.hp)
         let numOrganisms = organisms.length;
