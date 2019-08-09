@@ -30,6 +30,13 @@ export class LoadScene extends Phaser.Scene {
             this.load.spritesheet(CST.SPRITE[prop], CST.SPRITE[prop], frameConfig);
         }
     }
+    loadHTML() {
+        this.load.setPath("./assets/text");
+
+        for (let prop in CST.TEXT) {
+            this.load.html(CST.TEXT[prop], CST.TEXT[prop]);
+        }
+    }
     preload() {
         // load image, spritesheet, sound
         // this.loadAudio();
@@ -42,6 +49,7 @@ export class LoadScene extends Phaser.Scene {
             frameWidth: 16
         });
         this.loadImages();
+        this.loadHTML();
 
         // this.load.image("title_bg", "./assets/title_bg800.jpg");
         // this.load.image("play_button", "./assets/start.png")

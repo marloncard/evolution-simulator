@@ -4,8 +4,12 @@ import {MenuScene} from "./scenes/MenuScene";
 import {PlayScene} from "./scenes/PlayScene";
 
 let game = new Phaser.Game({
+    parent: 'phaser-tag',
     width: 800,
     height: 600,
+    dom: {
+        createContainer: true
+    },
     scene:[
         LoadScene,
         MenuScene,
@@ -14,7 +18,7 @@ let game = new Phaser.Game({
     physics: {
         default: "arcade",
         arcade: {
-            //debug: true
+            debug: true
         }
     }
 });

@@ -1,0 +1,19 @@
+@font-face {
+    font-family: sabo;
+    src: url(/Sabo-Regular.0e2091f1.otf);
+}
+@font-face {
+    font-family: sabo-filled;
+    src: url(/Sabo-Filled.1359abfd.otf);
+}
+
+  
+.navbar-brand {
+    font-family: sabo;
+    font-size: 2rem;
+}
+.nav-item {
+    font-family: sabo-filled;
+}
+
+/*# sourceMappingURL=/styles.f1468e05.css.map */

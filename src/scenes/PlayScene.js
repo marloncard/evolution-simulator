@@ -9,6 +9,11 @@ export class PlayScene extends Phaser.Scene {
          });
     }
 
+    init(data) {
+        console.log('init', data);
+        this.slimeCount = data.slimeCount;
+        this.mutationRate = data.mutationRate
+    }
     preload() {
 
     // Create animations
