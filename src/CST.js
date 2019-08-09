@@ -14,5 +14,8 @@ export const CST = {
     SPRITE: {
         SLIME: "slime.png"
 
+    },
+    TEXT: {
+        INPUT: "inputs.html"
     }
 }

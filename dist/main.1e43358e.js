@@ -139,6 +139,9 @@ var CST = {
   },
   SPRITE: {
     SLIME: "slime.png"
+  },
+  TEXT: {
+    INPUT: "inputs.html"
   }
 };
 exports.CST = CST;
@@ -214,6 +217,15 @@ function (_Phaser$Scene) {
       }
     }
   }, {
+    key: "loadHTML",
+    value: function loadHTML() {
+      this.load.setPath("./assets/text");
+
+      for (var prop in _CST.CST.TEXT) {
+        this.load.html(_CST.CST.TEXT[prop], _CST.CST.TEXT[prop]);
+      }
+    }
+  }, {
     key: "preload",
     value: function preload() {
       var _this = this;
@@ -227,7 +239,8 @@ function (_Phaser$Scene) {
         frameHeight: 16,
         frameWidth: 16
       });
-      this.loadImages(); // this.load.image("title_bg", "./assets/title_bg800.jpg");
+      this.loadImages();
+      this.loadHTML(); // this.load.image("title_bg", "./assets/title_bg800.jpg");
       // this.load.image("play_button", "./assets/start.png")
       //this.load.audio("title_music", "./assets/some-song.mp3")
       // create loading bar
@@ -320,13 +333,39 @@ function (_Phaser$Scene) {
     key: "init",
     value: function init() {}
   }, {
+    key: "preload",
+    value: function preload() {//this.load.html('infoform', './assets/text/inputs.html');
+    }
+  }, {
     key: "create",
     value: function create() {
       var _this = this;
 
-      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0);
+      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth;
       var playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, _CST.CST.IMAGE.START).setDepth(1).setScale(0.10);
-      playButton.alpha = 0.9; // // create audio
+      playButton.alpha = 0.9;
+      var text = this.add.text(10, 10, 'Evolution Simulator', {
+        color: 'black',
+        fontFamily: 'Arial',
+        fontSize: '32px '
+      }); // Input elements
+
+      var element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 100).createFromCache(_CST.CST.TEXT.INPUT).setDepth(2);
+      element.addListener('click');
+      element.on('click', function (event) {
+        if (event.target.name === 'submitButton') {
+          console.log(this === element);
+          var slimeCount = this.getChildByName('slimeCount');
+          var mutationRate = this.getChildByName('mutationRate');
+          var treeCount = this.getChildByName('treeCount');
+
+          if (slimeCount.value !== '' && mutationRate.value !== '' && treeCount.value !== '') {
+            this.removeListener('click');
+            console.log("clickety click!");
+            console.log(this === element);
+          }
+        }
+      }); // // create audio
       // this.sound.pauseOnBlur = false;
       // this.sound.play("title_music", {
       //     loop: true
@@ -349,8 +388,12 @@ function (_Phaser$Scene) {
         playButton.setScale(0.10);
         playButton.alpha = 0.9; //this.scene.start();
       });
-      playButton.on("pointerup", function () {
-        _this.scene.start(_CST.CST.SCENES.PLAY);
+      playButton.on("pointerup", function (event) {
+        _this.scene.start(_CST.CST.SCENES.PLAY, {
+          slimeCount: _this.slimeCount,
+          mutationRate: _this.mutationRate,
+          treeCount: _this.treeCount
+        });
 
         playButton.setScale(0.10);
         playButton.clearAlpha();
@@ -518,6 +561,13 @@ function (_Phaser$Scene) {
   }
 
   _createClass(PlayScene, [{
+    key: "init",
+    value: function init(data) {
+      console.log('init', data);
+      this.slimeCount = data.slimeCount;
+      this.mutationRate = data.mutationRate;
+    }
+  }, {
     key: "preload",
     value: function preload() {
       // Create animations
@@ -1082,12 +1132,17 @@ var _PlayScene = require("./scenes/PlayScene");
 
 /** @types {import("../typings/phaser")} */
 var game = new Phaser.Game({
+  parent: 'phaser-tag',
   width: 800,
   height: 600,
+  dom: {
+    createContainer: true
+  },
   scene: [_LoadScene.LoadScene, _MenuScene.MenuScene, _PlayScene.PlayScene],
   physics: {
     default: "arcade",
-    arcade: {//debug: true
+    arcade: {
+      debug: true
     }
   }
 });

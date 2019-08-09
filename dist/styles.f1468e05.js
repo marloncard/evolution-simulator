@@ -184,7 +184,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./bundle-url":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"dist/assets/css/styles.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"./../fonts/Sabo_Font/Sabo-Regular.otf":[["Sabo-Regular.0e2091f1.otf","dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"./../fonts/Sabo_Font/Sabo-Filled.otf":[["Sabo-Filled.1359abfd.otf","dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"_css_loader":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -212,8 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50378" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55075" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -389,4 +393,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/index.js.map
+//# sourceMappingURL=/styles.f1468e05.js.map
