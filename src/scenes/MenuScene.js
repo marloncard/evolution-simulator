@@ -23,21 +23,44 @@ export class MenuScene extends Phaser.Scene {
         // Input elements
         let element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 100).createFromCache(CST.TEXT.INPUT).setDepth(2)
         element.addListener('click');
+        this.slimeCount = "";
+        this.mutationRate = "";
+        this.treeCount = "";
+
+
         element.on('click', function (event) {
             if (event.target.name === 'submitButton') {
                 console.log(this === element)
-                let slimeCount = this.getChildByName('slimeCount');
-                let mutationRate = this.getChildByName('mutationRate');
-                let treeCount = this.getChildByName('treeCount');
-
-                if (slimeCount.value !== '' && mutationRate.value !== '' && treeCount.value !== '') {
-                    this.removeListener('click');
-                     console.log("clickety click!")
-                     console.log(this === element)
+                console.log(this.constructor.name)
+                console.log(event.target.constructor.name)
+                this.slimeCount = element.getChildByName('slimeCount').value;
+                this.mutationRate = element.getChildByName('mutationRate').value;
+                this.treeCount = element.getChildByName('treeCount').value;
+                console.log(this.slimeCount)
+                
+                if (this.slimeCount.value !== '' && this.mutationRate.value !== '' && this.treeCount.value !== '') {
+                    element.removeListener('click');
+                    console.log(this.slimeCount)
+                    console.log("clickety click!")
+                    console.log(this === element)
+                    console.log(this.constructor.name)
+         
+                    this.scene.start(CST.SCENES.PLAY, 
+                        {
+                            slimeCount: this.slimeCount, 
+                            mutationRate: this.mutationRate,
+                            treeCount: this.treeCount
+                        })
+        
                     
                 }
+
             }
-        });
+            
+        }, this);
+
+
+
 
         // // create audio
         // this.sound.pauseOnBlur = false;
@@ -70,7 +93,7 @@ export class MenuScene extends Phaser.Scene {
         playButton.on("pointerup", (event) => {
 
 
-            
+            console.log(this.constructor.name)
             this.scene.start(CST.SCENES.PLAY, 
                 {
                     slimeCount: this.slimeCount, 
@@ -82,4 +105,8 @@ export class MenuScene extends Phaser.Scene {
         })
     }
 
+    // update () {
+        
+    //     console.log(this.slimeCount.value)
+    // }
 }

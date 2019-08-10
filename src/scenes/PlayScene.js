@@ -13,6 +13,7 @@ export class PlayScene extends Phaser.Scene {
         console.log('init', data);
         this.slimeCount = data.slimeCount;
         this.mutationRate = data.mutationRate
+        this.treeCount = data.treeCount
     }
     preload() {
 
@@ -71,7 +72,7 @@ export class PlayScene extends Phaser.Scene {
         window.trees = this.trees;
 
         // Create n number of trees at random locations troughout hte grid;
-        for (let i = 0; i < 120; i++) {
+        for (let i = 0; i < this.treeCount; i++) { // Default 120
 
             let x = Phaser.Math.RND.between(0, 800);
             let y = Phaser.Math.RND.between(0, 600);
@@ -92,7 +93,7 @@ export class PlayScene extends Phaser.Scene {
         
 
         this.organisms = this.physics.add.group({classType: Sprite})
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < this.slimeCount; i++) {
             let x = Phaser.Math.RND.between(100, 500);
             let y = Phaser.Math.RND.between(100, 300);
 
@@ -380,7 +381,7 @@ export class PlayScene extends Phaser.Scene {
             offspring.generation = org.generation + 1;
             this.updateOutput.push(offspring.name + " was born")
             let mutate = Math.random()
-            if ( mutate < 0.20) { // 20% chance of mutation
+            if ( mutate < (this.mutationRate*0.01)) { // 20% chance of mutation
                 if (mutate < 0.10) {
                     offspring.vision -= 3;
                     //console.log("**Vision Mutation -3 for " + offspring.name);
@@ -393,7 +394,7 @@ export class PlayScene extends Phaser.Scene {
             };
             offspring.speed = org.speed
             mutate = Math.random()
-            if ( mutate < 0.20) { // 20% chance of mutation
+            if ( mutate < (this.mutationRate*0.01)) { // Chance of mutation
                 if (mutate < 0.10) {
                     offspring.speed -= 3;
                     //console.log("**Speed Mutation -3 for " + offspring.name);

@@ -352,20 +352,33 @@ function (_Phaser$Scene) {
 
       var element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 100).createFromCache(_CST.CST.TEXT.INPUT).setDepth(2);
       element.addListener('click');
+      this.slimeCount = "";
+      this.mutationRate = "";
+      this.treeCount = "";
       element.on('click', function (event) {
         if (event.target.name === 'submitButton') {
           console.log(this === element);
-          var slimeCount = this.getChildByName('slimeCount');
-          var mutationRate = this.getChildByName('mutationRate');
-          var treeCount = this.getChildByName('treeCount');
+          console.log(this.constructor.name);
+          console.log(event.target.constructor.name);
+          this.slimeCount = element.getChildByName('slimeCount').value;
+          this.mutationRate = element.getChildByName('mutationRate').value;
+          this.treeCount = element.getChildByName('treeCount').value;
+          console.log(this.slimeCount);
 
-          if (slimeCount.value !== '' && mutationRate.value !== '' && treeCount.value !== '') {
-            this.removeListener('click');
+          if (this.slimeCount.value !== '' && this.mutationRate.value !== '' && this.treeCount.value !== '') {
+            element.removeListener('click');
+            console.log(this.slimeCount);
             console.log("clickety click!");
             console.log(this === element);
+            console.log(this.constructor.name);
+            this.scene.start(_CST.CST.SCENES.PLAY, {
+              slimeCount: this.slimeCount,
+              mutationRate: this.mutationRate,
+              treeCount: this.treeCount
+            });
           }
         }
-      }); // // create audio
+      }, this); // // create audio
       // this.sound.pauseOnBlur = false;
       // this.sound.play("title_music", {
       //     loop: true
@@ -389,6 +402,8 @@ function (_Phaser$Scene) {
         playButton.alpha = 0.9; //this.scene.start();
       });
       playButton.on("pointerup", function (event) {
+        console.log(_this.constructor.name);
+
         _this.scene.start(_CST.CST.SCENES.PLAY, {
           slimeCount: _this.slimeCount,
           mutationRate: _this.mutationRate,
@@ -398,7 +413,10 @@ function (_Phaser$Scene) {
         playButton.setScale(0.10);
         playButton.clearAlpha();
       });
-    }
+    } // update () {
+    //     console.log(this.slimeCount.value)
+    // }
+
   }]);
 
   return MenuScene;
@@ -566,6 +584,7 @@ function (_Phaser$Scene) {
       console.log('init', data);
       this.slimeCount = data.slimeCount;
       this.mutationRate = data.mutationRate;
+      this.treeCount = data.treeCount;
     }
   }, {
     key: "preload",
@@ -642,7 +661,8 @@ function (_Phaser$Scene) {
 
       window.trees = this.trees; // Create n number of trees at random locations troughout hte grid;
 
-      for (var i = 0; i < 120; i++) {
+      for (var i = 0; i < this.treeCount; i++) {
+        // Default 120
         var x = Phaser.Math.RND.between(0, 800);
         var y = Phaser.Math.RND.between(0, 600);
         this.trees.create(x, y, 'tree');
@@ -660,7 +680,7 @@ function (_Phaser$Scene) {
         classType: _Sprite.Sprite
       });
 
-      for (var _i = 0; _i < 10; _i++) {
+      for (var _i = 0; _i < this.slimeCount; _i++) {
         var _x = Phaser.Math.RND.between(100, 500);
 
         var _y = Phaser.Math.RND.between(100, 300);
@@ -1079,7 +1099,7 @@ function (_Phaser$Scene) {
         this.updateOutput.push(offspring.name + " was born");
         var mutate = Math.random();
 
-        if (mutate < 0.20) {
+        if (mutate < this.mutationRate * 0.01) {
           // 20% chance of mutation
           if (mutate < 0.10) {
             offspring.vision -= 3; //console.log("**Vision Mutation -3 for " + offspring.name);
@@ -1096,8 +1116,8 @@ function (_Phaser$Scene) {
         offspring.speed = org.speed;
         mutate = Math.random();
 
-        if (mutate < 0.20) {
-          // 20% chance of mutation
+        if (mutate < this.mutationRate * 0.01) {
+          // Chance of mutation
           if (mutate < 0.10) {
             offspring.speed -= 3; //console.log("**Speed Mutation -3 for " + offspring.name);
 
@@ -1370,7 +1390,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55075" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64440" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
