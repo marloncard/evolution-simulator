@@ -80,6 +80,11 @@ export class PlayScene extends Phaser.Scene {
             this.trees.create(x, y, 'tree')
         }
 
+        // Set tree hitbox size
+        for (let tree of this.trees.getChildren()) {
+            tree.setSize(10, 10)
+        }
+
 
         this.gameTime = 0;
         this.nameCounter = 0;
@@ -203,14 +208,14 @@ export class PlayScene extends Phaser.Scene {
         //    slime.on("animationupdate", () => {
         //     console.log("LEVELUP")
         // });
-
+        
 
     }
     update(time, delta) { //delta 16.666 @ 60fps -- delta is fps in milliseconds
         // this.physics.world.collide(slime, slime, (slime) => {
         //     slime.destroy();
         // })
-
+        this.seconds = new Date().getUTCSeconds();
         this.slimeOutput = [];
 
 
