@@ -71,19 +71,19 @@ export class PlayScene extends Phaser.Scene {
         // Add trees group to the window object to make accessible in console
         window.trees = this.trees;
 
-        // Create n number of trees at random locations troughout hte grid;
+        // Create n number of trees at random locations troughout the grid;
         for (let i = 0; i < this.treeCount; i++) { // Default 120
 
             let x = Phaser.Math.RND.between(0, 800);
             let y = Phaser.Math.RND.between(0, 600);
 
             this.trees.create(x, y, 'tree')
-        }
+        };
 
         // Set tree hitbox size
         for (let tree of this.trees.getChildren()) {
             tree.setSize(10, 10)
-        }
+        };
 
 
         this.gameTime = 0;
@@ -147,7 +147,7 @@ export class PlayScene extends Phaser.Scene {
 
         // Respawn trees
         let treeTimer = this.time.addEvent({
-            delay: 30000,
+            delay: 20000,
             callback: this.regrowTrees,
             callbackScope: this,
             repeat: -1
@@ -273,7 +273,7 @@ export class PlayScene extends Phaser.Scene {
                         //organisms[i].setVelocity(0, 0)
                         //console.log(this.distanceToObject(organisms[i], tree))
                         //console.log(organisms[i].vision)
-                        this.physics.accelerateToObject(organisms[i], tree, 60, 30+organisms[i].speed, 30+organisms[i].speed)
+                        this.physics.accelerateToObject(organisms[i], tree, 60, 25+organisms[i].speed, 25+organisms[i].speed)
                     }
                 }
             }
@@ -351,9 +351,21 @@ export class PlayScene extends Phaser.Scene {
     };
 
     regrowTrees() {
+        let trees = this.trees.getChildren()
+        let numtrees = trees.length
 
-        for (let tree of this.trees.getChildren()) {
-            tree.enableBody(false, tree.x, tree.y, true, true);
+        for (let i = 0; i < numtrees; i++) {
+            if (this.seconds < 20 && i <= Math.ceil(this.treeCount / 3)) {
+                trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
+                console.log(i);
+            } else if (this.seconds > 20 && this.seconds < 40 && i > Math.ceil(this.treeCount/3) && i < Math.ceil(this.treeCount/1.5)) {
+                trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
+                console.log(i);
+            } else if (this.seconds > 40 && i > Math.ceil(this.treeCount/1.5)) {
+                trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
+                console.log(i);
+            }
+
             //console.log("**Spring has sprung**")
         }
     };
