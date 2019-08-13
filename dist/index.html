@@ -7,35 +7,10 @@
     <title>Evolution Simulator</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/styles.f1468e05.css">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <script>window.onload = function () {
-  var chart = new CanvasJS.Chart("chartContainer", {
-    title: {
-      text: "My First Chart in CanvasJS"
-    },
-    data: [{
-      // Change type to "doughnut", "line", "splineArea", etc.
-      type: "column",
-      dataPoints: [{
-        label: "apple",
-        y: 10
-      }, {
-        label: "orange",
-        y: 15
-      }, {
-        label: "banana",
-        y: 25
-      }, {
-        label: "mango",
-        y: 30
-      }, {
-        label: "grape",
-        y: 28
-      }]
-    }]
-  });
-  chart.render();
-};</script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+
+
     <!--
     <style>
         canvas { width: 100%;}
@@ -79,14 +54,19 @@
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4">
           <div>
-
                 <div id="phaser-tag"></div>
           </div>
         </header>
     
         <!-- Chart -->
         <main>
-            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+            <div><a href="#" id="myLink">Load Chart</a></div>
+            <div id="result"></div>
+            <div id="result2"></div>
+            
+
+
         </main>
         <!-- /.row -->
     
@@ -105,9 +85,18 @@
 
       <script src="/phaser.09c160a4.js"></script>
       <script src="/main.1e43358e.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <!--
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <!--<script src="./src/data.js"></script>-->
+      <script>$("#myLink").on("click", function () {
+  $("#result").load("assets/text/chart.html");
+  $("#result2").load("assets/text/data.html");
+  console.log("clickyy");
+});</script>
 </body>
 
 </html>

@@ -14,6 +14,13 @@ export class PlayScene extends Phaser.Scene {
         this.slimeCount = data.slimeCount;
         this.mutationRate = data.mutationRate
         this.treeCount = data.treeCount
+        
+        window.dataPacket = {
+            creatures : [10,20,30],
+            avgVision : [7,11,15],
+            avgSpeed : [10,11,19],
+            time: [100, 200, 300]
+        }
     }
     preload() {
 
@@ -45,8 +52,7 @@ export class PlayScene extends Phaser.Scene {
     // Load map tiles
     this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
     this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json');
-
-    this.load.image('tree', './assets/image/overworld-92.png')
+    this.load.image('tree', './assets/image/overworld-92.png');
 
     // Ouput files loaded to console
     this.load.on("load", (file) => {
@@ -55,6 +61,7 @@ export class PlayScene extends Phaser.Scene {
     
     }
     create() {
+        
         //const map = this.make.tilemap({ key: 'map'});
         let map = this.add.tilemap('map');
         //const tileset = map.addTilesetImage('evo-default', 'tileset');
@@ -357,13 +364,10 @@ export class PlayScene extends Phaser.Scene {
         for (let i = 0; i < numtrees; i++) {
             if (this.seconds < 20 && i <= Math.ceil(this.treeCount / 3)) {
                 trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-                console.log(i);
             } else if (this.seconds > 20 && this.seconds < 40 && i > Math.ceil(this.treeCount/3) && i < Math.ceil(this.treeCount/1.5)) {
                 trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-                console.log(i);
             } else if (this.seconds > 40 && i > Math.ceil(this.treeCount/1.5)) {
                 trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-                console.log(i);
             }
 
             //console.log("**Spring has sprung**")
@@ -422,11 +426,19 @@ export class PlayScene extends Phaser.Scene {
                     this.updateOutput.push(offspring.name + ' speed mutation +3');
                 }
             };
+            if (offspring.speed < 0) {
+                offspring.speed = 0;
+            }
+            if (offspring.vision < 0) {
+                offspring.vision = 0;
+            }
             this.nameCounter++;
             offspring.setInteractive()
             offspring.setCollideWorldBounds(true);
         }
     }
+
+
 
     
 

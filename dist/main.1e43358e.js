@@ -188,7 +188,14 @@ function (_Phaser$Scene) {
 
   _createClass(LoadScene, [{
     key: "init",
-    value: function init() {}
+    value: function init() {
+      window.dataPacket = {
+        creatures: [10, 20, 30],
+        avgVision: [7, 11, 15],
+        avgSpeed: [10, 11, 19],
+        time: [100, 200, 300]
+      };
+    }
   }, {
     key: "loadImages",
     value: function loadImages() {
@@ -585,6 +592,12 @@ function (_Phaser$Scene) {
       this.slimeCount = data.slimeCount;
       this.mutationRate = data.mutationRate;
       this.treeCount = data.treeCount;
+      window.dataPacket = {
+        creatures: [10, 20, 30],
+        avgVision: [7, 11, 15],
+        avgSpeed: [10, 11, 19],
+        time: [100, 200, 300]
+      };
     }
   }, {
     key: "preload",
@@ -1056,13 +1069,10 @@ function (_Phaser$Scene) {
       for (var i = 0; i < numtrees; i++) {
         if (this.seconds < 20 && i <= Math.ceil(this.treeCount / 3)) {
           trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-          console.log(i);
         } else if (this.seconds > 20 && this.seconds < 40 && i > Math.ceil(this.treeCount / 3) && i < Math.ceil(this.treeCount / 1.5)) {
           trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-          console.log(i);
         } else if (this.seconds > 40 && i > Math.ceil(this.treeCount / 1.5)) {
           trees[i].enableBody(false, trees[i].x, trees[i].y, true, true);
-          console.log(i);
         } //console.log("**Spring has sprung**")
 
       }
@@ -1151,6 +1161,15 @@ function (_Phaser$Scene) {
         }
 
         ;
+
+        if (offspring.speed < 0) {
+          offspring.speed = 0;
+        }
+
+        if (offspring.vision < 0) {
+          offspring.vision = 0;
+        }
+
         this.nameCounter++;
         offspring.setInteractive();
         offspring.setCollideWorldBounds(true);
@@ -1411,7 +1430,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65240" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49691" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
