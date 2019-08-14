@@ -1,4 +1,18 @@
-<input type="text" name="slimeCount" placeholder="Creature Count" style="font-size: 20px">
-<input type="text" name="mutationRate" placeholder="Mutation Rate" style="font-size: 20px">
-<input type="text" name="treeCount" placeholder="Tree Count" style="font-size: 20px">
-<input type="button" name="submitButton" value="Play" style="font-size: 20px">
+
+<div id="input1">
+<h6>Creature Count: <span id="slimeOutput"></span></h6>
+<input type="range" min="5" max="100" value="15" name="slimeCount" id="slimeCount" style="font-size: 20px">
+</div>
+
+<div id="input2">
+<h6>Mutation Rate: <span id="mutationOutput"></span></h6>
+<input type="range" min="0" max="100" value="20" name="mutationRate" id="mutationRate" style="font-size: 20px">
+</div>
+
+<div id="input3">
+<h6>Tree Count: <span id="treeOutput"></span></h6>
+<input type="range" min="20" max="400" value="150" name="treeCount" id="treeCount" style="font-size: 20px">
+</div>
+
+
+<input type="button" name="submitButton" value="Run" id="submitButton" style="font-size: 20px">

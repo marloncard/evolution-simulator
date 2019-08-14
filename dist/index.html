@@ -53,15 +53,21 @@
     
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4">
-          <div>
+          <div class="row">
+            <div class="col-md-8">
                 <div id="phaser-tag"></div>
+                <button id="myLink">Chart</button>
+            </div>
           </div>
+            <div>
+              
+            </div>
         </header>
     
         <!-- Chart -->
         <main>
 
-            <div><a href="#" id="myLink">Load Chart</a></div>
+            <div></div>
             <div id="result"></div>
             <div id="result2"></div>
             
@@ -76,7 +82,7 @@
       <!-- Footer -->
       <footer class="py-5 bg-dark">
         <div class="container">
-          <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+          <p class="m-0 text-center text-white">Copyright &copy; Evolution Simulator 2019</p>
         </div>
         <!-- /.container -->
       </footer>
@@ -92,11 +98,47 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <!--<script src="./src/data.js"></script>-->
+      <script>//window.addEventListener('load', () => {
+setTimeout(function () {
+  var slimeSlider = document.getElementById('slimeCount');
+  var mutationSlider = document.getElementById('mutationRate');
+  var treeSlider = document.getElementById('treeCount');
+  var slimeOutput = document.getElementById('slimeOutput');
+  var mutationOutput = document.getElementById('mutationOutput');
+  var treeOutput = document.getElementById('treeOutput');
+  slimeOutput.innerHTML = slimeSlider.value;
+  mutationOutput.innerHTML = mutationSlider.value;
+  treeOutput.innerHTML = treeSlider.value;
+
+  slimeSlider.oninput = function () {
+    slimeOutput.innerHTML = slimeSlider.value;
+  };
+
+  mutationSlider.oninput = function () {
+    mutationOutput.innerHTML = mutationSlider.value;
+  };
+
+  treeSlider.oninput = function () {
+    treeOutput.innerHTML = treeSlider.value;
+  };
+}, 2000); //})</script>
+
       <script>$("#myLink").on("click", function () {
-  $("#result").load("assets/text/chart.html");
-  $("#result2").load("assets/text/data.html");
-  console.log("clickyy");
+  if (document.getElementById("chart") === null) {
+    $("#result").load("assets/text/chart.html", function () {
+      $("#result2").load("assets/text/data.html");
+    });
+  } else {
+    var div = document.getElementById('result');
+    var div2 = document.getElementById('result2');
+    div.innerHTML = "";
+    div2.innerHTML = "";
+  }
 });</script>
+
+
+
+
 </body>
 
 </html>

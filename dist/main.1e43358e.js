@@ -189,11 +189,13 @@ function (_Phaser$Scene) {
   _createClass(LoadScene, [{
     key: "init",
     value: function init() {
+      window.chart = null;
+      window.options = null;
       window.dataPacket = {
-        creatures: [10, 20, 30],
-        avgVision: [7, 11, 15],
-        avgSpeed: [10, 11, 19],
-        time: [100, 200, 300]
+        creatures: [],
+        avgVision: [],
+        avgSpeed: [],
+        time: []
       };
     }
   }, {
@@ -346,18 +348,16 @@ function (_Phaser$Scene) {
   }, {
     key: "create",
     value: function create() {
-      var _this = this;
+      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth; // let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, CST.IMAGE.START).setDepth(1).setScale(0.10);
+      // playButton.alpha = 0.9;
 
-      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth;
-      var playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, _CST.CST.IMAGE.START).setDepth(1).setScale(0.10);
-      playButton.alpha = 0.9;
-      var text = this.add.text(10, 10, 'Evolution Simulator', {
+      var text = this.add.text(10, 10, '', {
         color: 'black',
         fontFamily: 'Arial',
         fontSize: '32px '
       }); // Input elements
 
-      var element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 100).createFromCache(_CST.CST.TEXT.INPUT).setDepth(2);
+      var element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 150).createFromCache(_CST.CST.TEXT.INPUT).setDepth(2);
       element.addListener('click');
       this.slimeCount = "";
       this.mutationRate = "";
@@ -398,28 +398,27 @@ function (_Phaser$Scene) {
               pointerup - click and release
               pointerdown - just  click
         */
-
-      playButton.setInteractive();
-      playButton.on("pointerover", function () {
-        playButton.setScale(0.12);
-        playButton.clearAlpha();
-      });
-      playButton.on("pointerout", function () {
-        playButton.setScale(0.10);
-        playButton.alpha = 0.9; //this.scene.start();
-      });
-      playButton.on("pointerup", function (event) {
-        console.log(_this.constructor.name);
-
-        _this.scene.start(_CST.CST.SCENES.PLAY, {
-          slimeCount: _this.slimeCount,
-          mutationRate: _this.mutationRate,
-          treeCount: _this.treeCount
-        });
-
-        playButton.setScale(0.10);
-        playButton.clearAlpha();
-      });
+      // playButton.setInteractive();
+      // playButton.on("pointerover", () => {
+      //     playButton.setScale(0.12)
+      //     playButton.clearAlpha();
+      // })
+      // playButton.on("pointerout", () => {
+      //     playButton.setScale(0.10)
+      //     playButton.alpha = 0.9;
+      //     //this.scene.start();
+      // })
+      // playButton.on("pointerup", (event) => {
+      //     console.log(this.constructor.name)
+      //     this.scene.start(CST.SCENES.PLAY, 
+      //         {
+      //             slimeCount: this.slimeCount, 
+      //             mutationRate: this.mutationRate,
+      //             treeCount: this.treeCount
+      //         })
+      //     playButton.setScale(0.10);
+      //     playButton.clearAlpha();
+      // })
     } // update () {
     //     console.log(this.slimeCount.value)
     // }
@@ -592,12 +591,6 @@ function (_Phaser$Scene) {
       this.slimeCount = data.slimeCount;
       this.mutationRate = data.mutationRate;
       this.treeCount = data.treeCount;
-      window.dataPacket = {
-        creatures: [10, 20, 30],
-        avgVision: [7, 11, 15],
-        avgSpeed: [10, 11, 19],
-        time: [100, 200, 300]
-      };
     }
   }, {
     key: "preload",
@@ -832,6 +825,12 @@ function (_Phaser$Scene) {
         },
         callbackScope: this,
         loop: true
+      });
+      this.graphUpdate = this.time.addEvent({
+        delay: 30000,
+        callback: this.pushGraph,
+        callbackScope: this,
+        loop: true
       }); // Specify property
       //this.treeLayer.setCollisionByProperty({collide:true});
       //waterLayer.setCollisionByProperty({collide:true});
@@ -902,9 +901,7 @@ function (_Phaser$Scene) {
         this.movementAnim(organisms[i]);
         organisms[i].metabolise(2, this.gameTime);
         organisms[i].senescense(this.gameTime);
-        this.cloneSprite(organisms[i]); // if (weeBabe != null) {
-        //     weeBabe.setInteractive();
-        // }
+        this.cloneSprite(organisms[i]);
 
         if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0) {
           this.randomMovement(organisms[i]);
@@ -1175,6 +1172,56 @@ function (_Phaser$Scene) {
         offspring.setCollideWorldBounds(true);
       }
     }
+  }, {
+    key: "pushGraph",
+    value: function pushGraph() {
+      var orgArray = this.organisms.getChildren();
+      var visionArray = [];
+      var speedArray = [];
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = orgArray[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var org = _step7.value;
+          visionArray.push(org.vision);
+          speedArray.push(org.speed);
+        } //console.log(orgArray.length)
+        //console.log(visionArray)
+        //console.log(speedArray)
+
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
+
+      window.dataPacket.avgVision.push(Math.round(visionArray.reduce(function (a, b) {
+        return a + b;
+      }) / visionArray.length));
+      window.dataPacket.avgSpeed.push(Math.round(speedArray.reduce(function (a, b) {
+        return a + b;
+      }) / speedArray.length));
+      window.dataPacket.creatures.push(orgArray.length);
+      window.dataPacket.time.push(this.gameTime);
+
+      if (window.dataPacket.time.length > 20) {
+        window.dataPacket.avgVision.shift();
+        window.dataPacket.avgSpeed.shift();
+        window.dataPacket.creatures.shift();
+        window.dataPacket.time.shift();
+      }
+    }
   }]);
 
   return PlayScene;
@@ -1430,7 +1477,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49691" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54019" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

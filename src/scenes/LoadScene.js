@@ -7,11 +7,13 @@ export class LoadScene extends Phaser.Scene {
         })
     }
     init() {
+        window.chart = null;
+        window.options = null;
         window.dataPacket = {
-            creatures : [10,20,30],
-            avgVision : [7,11,15],
-            avgSpeed : [10,11,19],
-            time: [100, 200, 300]
+            creatures : [],
+            avgVision : [],
+            avgSpeed : [],
+            time: []
         }
     }
     loadImages() {

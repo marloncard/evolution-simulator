@@ -15,12 +15,6 @@ export class PlayScene extends Phaser.Scene {
         this.mutationRate = data.mutationRate
         this.treeCount = data.treeCount
         
-        window.dataPacket = {
-            creatures : [10,20,30],
-            avgVision : [7,11,15],
-            avgSpeed : [10,11,19],
-            time: [100, 200, 300]
-        }
     }
     preload() {
 
@@ -186,6 +180,13 @@ export class PlayScene extends Phaser.Scene {
             loop: true
         });
 
+        this.graphUpdate = this.time.addEvent({
+            delay: 30000,
+            callback: this.pushGraph,
+            callbackScope: this,
+            loop: true
+        })
+
         // Specify property
         //this.treeLayer.setCollisionByProperty({collide:true});
         //waterLayer.setCollisionByProperty({collide:true});
@@ -267,10 +268,7 @@ export class PlayScene extends Phaser.Scene {
             organisms[i].metabolise(2, this.gameTime)
             organisms[i].senescense(this.gameTime)
             this.cloneSprite(organisms[i])
-            // if (weeBabe != null) {
-            //     weeBabe.setInteractive();
 
-            // }
 
             if (organisms[i].body.velocity.x === 0 && organisms[i].body.velocity.y === 0 ) {
                 this.randomMovement(organisms[i]);
@@ -438,7 +436,29 @@ export class PlayScene extends Phaser.Scene {
         }
     }
 
-
+    pushGraph() {
+        let orgArray = this.organisms.getChildren()
+        let visionArray = [];
+        let speedArray = [];
+        for (let org of orgArray) {
+            visionArray.push(org.vision)
+            speedArray.push(org.speed)
+        }
+        //console.log(orgArray.length)
+        //console.log(visionArray)
+        //console.log(speedArray)
+        window.dataPacket.avgVision.push(Math.round(visionArray.reduce((a,b)=>{return a+b})/visionArray.length))
+        window.dataPacket.avgSpeed.push(Math.round(speedArray.reduce((a,b)=>{return a+b})/speedArray.length))
+        window.dataPacket.creatures.push(orgArray.length)
+        window.dataPacket.time.push(this.gameTime)
+        if (window.dataPacket.time.length > 20) {
+            window.dataPacket.avgVision.shift()
+            window.dataPacket.avgSpeed.shift()
+            window.dataPacket.creatures.shift()
+            window.dataPacket.time.shift()
+        }
+        
+    }
 
     
 

@@ -1,7 +1,7 @@
 
 //window.onload = function () {
     console.log(window.dataPacket)
-    const options = {
+    window.options = {
         chart: {
             width: 800,
             height: 350,
@@ -72,7 +72,7 @@
     }
 
     const chart = new ApexCharts(
-        document.querySelector("#chart"), options
+        document.querySelector("#chart"), window.options
     );
 
   chart.render();

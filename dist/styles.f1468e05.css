@@ -7,13 +7,40 @@
     src: url(/Sabo-Filled.1359abfd.otf);
 }
 
-  
+.jumbotron {
+    background-color: #ffffff;
+}
+
 .navbar-brand {
     font-family: sabo;
     font-size: 2rem;
 }
 .nav-item {
     font-family: sabo-filled;
+}
+h6 {
+    color: white;
+}
+#input1 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#input2 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#input3 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#submitButton {
+    display: inline-block;
+}
+.jumbo-tron {
+    margin-top: 0px;
+}
+.my-4 {
+    margin-top: .6rem!important;
 }
 
 /*# sourceMappingURL=/styles.f1468e05.css.map */
