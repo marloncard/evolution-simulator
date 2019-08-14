@@ -137,18 +137,18 @@ export class PlayScene extends Phaser.Scene {
         });
         
         // ---------------------------- //
-        let playButton = this.add.image(750, 550, CST.IMAGE.START).setDepth(1).setScale(0.05);
+        let playButton = this.add.image(30, 7, CST.IMAGE.START).setDepth(1).setScale(0.05);
         playButton.alpha = 0.9;
 
         playButton.setInteractive();
 
         playButton.on("pointerover", () => {
-            playButton.setScale(0.12)
+            playButton.setScale(0.06)
             playButton.clearAlpha();
         })
 
         playButton.on("pointerout", () => {
-            playButton.setScale(0.10)
+            playButton.setScale(0.05)
             playButton.alpha = 0.9;
             //this.scene.start();
         })
@@ -170,7 +170,7 @@ export class PlayScene extends Phaser.Scene {
             }
 
 
-            playButton.setScale(0.10);
+            playButton.setScale(0.05);
             playButton.clearAlpha();
         })
         //-------------------------//

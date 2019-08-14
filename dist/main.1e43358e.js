@@ -731,15 +731,15 @@ function (_Phaser$Scene) {
         repeat: -1
       }); // ---------------------------- //
 
-      var playButton = this.add.image(750, 550, _CST.CST.IMAGE.START).setDepth(1).setScale(0.05);
+      var playButton = this.add.image(30, 7, _CST.CST.IMAGE.START).setDepth(1).setScale(0.05);
       playButton.alpha = 0.9;
       playButton.setInteractive();
       playButton.on("pointerover", function () {
-        playButton.setScale(0.12);
+        playButton.setScale(0.06);
         playButton.clearAlpha();
       });
       playButton.on("pointerout", function () {
-        playButton.setScale(0.10);
+        playButton.setScale(0.05);
         playButton.alpha = 0.9; //this.scene.start();
       });
       playButton.on("pointerup", function (event) {
@@ -761,7 +761,7 @@ function (_Phaser$Scene) {
           _this.updateText.setVisible(true);
         }
 
-        playButton.setScale(0.10);
+        playButton.setScale(0.05);
         playButton.clearAlpha();
       }); //-------------------------//
 
@@ -1488,7 +1488,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49497" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56626" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
