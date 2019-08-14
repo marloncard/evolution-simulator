@@ -6,6 +6,10 @@
     font-family: sabo-filled;
     src: url(../fonts/Sabo_Font/Sabo-Filled.otf);
 }
+body {
+    background-image: url("../image/background2.jpg");
+    background-position: center bottom;
+  }
 
 .jumbotron {
     background-color: #ffffff;
@@ -36,9 +40,17 @@ h6 {
 #submitButton {
     display: inline-block;
 }
-.jumbo-tron {
+header {
     margin-top: 0px;
+    background-color: transparent !important;
+    float: center;
 }
 .my-4 {
     margin-top: .6rem!important;
+}
+#phaser-tag {
+    padding-top: 0px;
+}
+#chart {
+    background-color: white;
 }

@@ -5,7 +5,7 @@ export const CST = {
         PLAY: "PLAY"
     },
     IMAGE: {
-        START: "start.png",
+        START: "eye.png",
         TITLE: "title_bg800.jpg"
     },
     AUDIO: {

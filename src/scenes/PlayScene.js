@@ -127,7 +127,6 @@ export class PlayScene extends Phaser.Scene {
         // }
         //slime.setCollideWorldBounds(true);
 
-
         // Text objects
         let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '12px', fill: '#fff' })
         let timer = this.time.addEvent({
@@ -136,6 +135,46 @@ export class PlayScene extends Phaser.Scene {
             callbackScope: this,
             repeat: -1
         });
+        
+        // ---------------------------- //
+        let playButton = this.add.image(750, 550, CST.IMAGE.START).setDepth(1).setScale(0.05);
+        playButton.alpha = 0.9;
+
+        playButton.setInteractive();
+
+        playButton.on("pointerover", () => {
+            playButton.setScale(0.12)
+            playButton.clearAlpha();
+        })
+
+        playButton.on("pointerout", () => {
+            playButton.setScale(0.10)
+            playButton.alpha = 0.9;
+            //this.scene.start();
+        })
+
+        playButton.on("pointerup", (event) => {
+
+            if (this.orgText.visible) {
+                this.orgLabel.setVisible(false);
+                this.orgText.setVisible(false);
+                this.updateLabel.setVisible(false);
+                this.updateText.setVisible(false);
+
+            } else {
+                this.orgLabel.setVisible(true);
+                this.orgText.setVisible(true);
+                this.updateLabel.setVisible(true);
+                this.updateText.setVisible(true);
+                
+            }
+
+
+            playButton.setScale(0.10);
+            playButton.clearAlpha();
+        })
+        //-------------------------//
+
         this.orgLabel = this.add.text(16, 42, 'THE LIVING', {fontSize: '13px', fill: '#000'}).setDepth(10);
         this.orgLabel.setAlpha(0.75);
         this.orgText = this.add.text(16, 55, '', {fontSize: '12px', fill: '#fff'}).setDepth(10);

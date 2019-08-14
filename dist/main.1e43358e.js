@@ -131,7 +131,7 @@ var CST = {
     PLAY: "PLAY"
   },
   IMAGE: {
-    START: "start.png",
+    START: "eye.png",
     TITLE: "title_bg800.jpg"
   },
   AUDIO: {
@@ -348,9 +348,7 @@ function (_Phaser$Scene) {
   }, {
     key: "create",
     value: function create() {
-      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth; // let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 + 20, CST.IMAGE.START).setDepth(1).setScale(0.10);
-      // playButton.alpha = 0.9;
-
+      this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth;
       var text = this.add.text(10, 10, '', {
         color: 'black',
         fontFamily: 'Arial',
@@ -398,27 +396,6 @@ function (_Phaser$Scene) {
               pointerup - click and release
               pointerdown - just  click
         */
-      // playButton.setInteractive();
-      // playButton.on("pointerover", () => {
-      //     playButton.setScale(0.12)
-      //     playButton.clearAlpha();
-      // })
-      // playButton.on("pointerout", () => {
-      //     playButton.setScale(0.10)
-      //     playButton.alpha = 0.9;
-      //     //this.scene.start();
-      // })
-      // playButton.on("pointerup", (event) => {
-      //     console.log(this.constructor.name)
-      //     this.scene.start(CST.SCENES.PLAY, 
-      //         {
-      //             slimeCount: this.slimeCount, 
-      //             mutationRate: this.mutationRate,
-      //             treeCount: this.treeCount
-      //         })
-      //     playButton.setScale(0.10);
-      //     playButton.clearAlpha();
-      // })
     } // update () {
     //     console.log(this.slimeCount.value)
     // }
@@ -752,7 +729,42 @@ function (_Phaser$Scene) {
         },
         callbackScope: this,
         repeat: -1
+      }); // ---------------------------- //
+
+      var playButton = this.add.image(750, 550, _CST.CST.IMAGE.START).setDepth(1).setScale(0.05);
+      playButton.alpha = 0.9;
+      playButton.setInteractive();
+      playButton.on("pointerover", function () {
+        playButton.setScale(0.12);
+        playButton.clearAlpha();
       });
+      playButton.on("pointerout", function () {
+        playButton.setScale(0.10);
+        playButton.alpha = 0.9; //this.scene.start();
+      });
+      playButton.on("pointerup", function (event) {
+        if (_this.orgText.visible) {
+          _this.orgLabel.setVisible(false);
+
+          _this.orgText.setVisible(false);
+
+          _this.updateLabel.setVisible(false);
+
+          _this.updateText.setVisible(false);
+        } else {
+          _this.orgLabel.setVisible(true);
+
+          _this.orgText.setVisible(true);
+
+          _this.updateLabel.setVisible(true);
+
+          _this.updateText.setVisible(true);
+        }
+
+        playButton.setScale(0.10);
+        playButton.clearAlpha();
+      }); //-------------------------//
+
       this.orgLabel = this.add.text(16, 42, 'THE LIVING', {
         fontSize: '13px',
         fill: '#000'
@@ -1248,8 +1260,7 @@ var game = new Phaser.Game({
   scene: [_LoadScene.LoadScene, _MenuScene.MenuScene, _PlayScene.PlayScene],
   physics: {
     default: "arcade",
-    arcade: {
-      debug: true
+    arcade: {//debug: true
     }
   }
 });
@@ -1477,7 +1488,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54019" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49497" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -189,7 +189,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./../fonts/Sabo_Font/Sabo-Regular.otf":[["Sabo-Regular.0e2091f1.otf","dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"./../fonts/Sabo_Font/Sabo-Filled.otf":[["Sabo-Filled.1359abfd.otf","dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"_css_loader":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./../fonts/Sabo_Font/Sabo-Regular.otf":[["Sabo-Regular.0e2091f1.otf","dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"./../fonts/Sabo_Font/Sabo-Filled.otf":[["Sabo-Filled.1359abfd.otf","dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"./../image/background2.jpg":[["background2.c1047001.jpg","dist/assets/image/background2.jpg"],"dist/assets/image/background2.jpg"],"_css_loader":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -217,7 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54019" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49497" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
