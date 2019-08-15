@@ -768,22 +768,22 @@ function (_Phaser$Scene) {
       this.orgLabel = this.add.text(16, 42, 'THE LIVING', {
         fontSize: '13px',
         fill: '#000'
-      }).setDepth(10);
+      }).setDepth(10).setVisible(false);
       this.orgLabel.setAlpha(0.75);
       this.orgText = this.add.text(16, 55, '', {
         fontSize: '12px',
         fill: '#fff'
-      }).setDepth(10);
+      }).setDepth(10).setVisible(false);
       this.orgText.setAlpha(0.75);
       this.updateLabel = this.add.text(400, 42, 'UPDATES', {
         fontSize: '13px',
         fill: '#000'
-      }).setDepth(10);
+      }).setDepth(10).setVisible(false);
       this.updateLabel.setAlpha(0.75);
       this.updateText = this.add.text(400, 55, '', {
         fontSize: '12px',
         fill: '#fff'
-      }).setDepth(10);
+      }).setDepth(10).setVisible(false);
       this.updateText.setAlpha(0.75); // Respawn trees
 
       var treeTimer = this.time.addEvent({
@@ -1488,7 +1488,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56626" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64559" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

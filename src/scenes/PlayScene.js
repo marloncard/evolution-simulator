@@ -175,14 +175,14 @@ export class PlayScene extends Phaser.Scene {
         })
         //-------------------------//
 
-        this.orgLabel = this.add.text(16, 42, 'THE LIVING', {fontSize: '13px', fill: '#000'}).setDepth(10);
+        this.orgLabel = this.add.text(16, 42, 'THE LIVING', {fontSize: '13px', fill: '#000'}).setDepth(10).setVisible(false);
         this.orgLabel.setAlpha(0.75);
-        this.orgText = this.add.text(16, 55, '', {fontSize: '12px', fill: '#fff'}).setDepth(10);
+        this.orgText = this.add.text(16, 55, '', {fontSize: '12px', fill: '#fff'}).setDepth(10).setVisible(false);
         this.orgText.setAlpha(0.75);
 
-        this.updateLabel = this.add.text(400, 42, 'UPDATES', {fontSize: '13px', fill: '#000'}).setDepth(10);
+        this.updateLabel = this.add.text(400, 42, 'UPDATES', {fontSize: '13px', fill: '#000'}).setDepth(10).setVisible(false);
         this.updateLabel.setAlpha(0.75);
-        this.updateText = this.add.text(400, 55, '', { fontSize: '12px', fill: '#fff' }).setDepth(10);
+        this.updateText = this.add.text(400, 55, '', { fontSize: '12px', fill: '#fff' }).setDepth(10).setVisible(false);
         this.updateText.setAlpha(0.75);
 
         // Respawn trees
