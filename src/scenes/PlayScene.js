@@ -19,24 +19,28 @@ export class PlayScene extends Phaser.Scene {
     preload() {
 
     // Create animations
+    // -- Idle Animation
     this.anims.create({
         key: 'idle',
         frames: this.anims.generateFrameNames('slime', {prefix: 'slime-0', start: 5, end: 8, suffix: '.png'}),
         frameRate:5,
         repeat: -1
     })
+    // -- North Animation
     this.anims.create({
         key: 'north',
         frames: this.anims.generateFrameNames('slime', {prefix:'slime-0', start: 1, end: 4, suffix: '.png'}),
         frameRate:15,
         repeat: -1
     })
+    // -- South Animation
     this.anims.create({
         key: 'south',
         frames: this.anims.generateFrameNames('slime', {prefix:'slime-0', start: 5, end: 8, suffix: '.png'}),
         frameRate:15,
         repeat: -1
     })
+    // -- West Animation
     this.anims.create({
         key: 'west',
         frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: 9, end: 12, suffix: '.png'}),
@@ -49,16 +53,15 @@ export class PlayScene extends Phaser.Scene {
     this.load.image('tree', './assets/image/overworld-92.png');
 
     // Ouput files loaded to console
-    this.load.on("load", (file) => {
-        console.log(file.src)
-    })
+    // this.load.on("load", (file) => {
+    //     console.log(file.src)
+    // })
     
     }
     create() {
-        
-        //const map = this.make.tilemap({ key: 'map'});
+        // Initialize map
         let map = this.add.tilemap('map');
-        //const tileset = map.addTilesetImage('evo-default', 'tileset');
+        // Initialize tileset
         let tileset = map.addTilesetImage('evo-default', 'tileset')
 
         // Layers
@@ -67,9 +70,10 @@ export class PlayScene extends Phaser.Scene {
         //let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
 
+        // Create empty physics group for trees
         this.trees = this.physics.add.group()
 
-        // Add trees group to the window object to make accessible in console
+        // Add trees group to the window object to make accessible globally
         window.trees = this.trees;
 
         // Create n number of trees at random locations troughout the grid;
@@ -86,18 +90,9 @@ export class PlayScene extends Phaser.Scene {
             tree.setSize(10, 10)
         };
 
-
         this.gameTime = 0;
         this.nameCounter = 0;
-        //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
-
-        //let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
-        //this.physics.add.existing() //manual add
-        //window.slime = slime; // Add slime to window object to access from console.
-        //slime.setInteractive().setAlpha(0.5)
-        //this.input.on("gameobjectdown", this.onObjectClicked);
-        
-
+        // Create organisms physics group and populate using this.slimeCount
         this.organisms = this.physics.add.group({classType: Sprite})
         for (let i = 0; i < this.slimeCount; i++) {
             let x = Phaser.Math.RND.between(100, 500);
@@ -109,25 +104,20 @@ export class PlayScene extends Phaser.Scene {
             this.organisms.getChildren()[i].vision = Phaser.Math.Between(0, 50)
             this.nameCounter++ 
         };
-
+        // Add organisms group to the window object to make accessible globally
         window.organisms = this.organisms
 
         // Takes an array of objects and passes each of them to the given callback.
         Phaser.Actions.Call(this.organisms.getChildren(), function(organism) {
-        // make item interactive
+        // Make organisms interactive
         organism.setInteractive();
+        // Set organism bounce
         organism.setBounce(0.5,0.5)
+        // Set organism collision with world bounds
         organism.setCollideWorldBounds(true);
-        
         }, this);
 
-        //this.body.onWorldBounds = true;
-        // this.physics.arcade.collide(this.organisms), (organism) => {
-        //     organism.destroy();
-        // }
-        //slime.setCollideWorldBounds(true);
-
-        // Text objects
+        // Create world timer text object
         let timerText = this.add.text(16, 16, 'Timer: ' + 0, { fontSize: '12px', fill: '#fff' })
         let timer = this.time.addEvent({
             delay:1000,
@@ -136,7 +126,7 @@ export class PlayScene extends Phaser.Scene {
             repeat: -1
         });
         
-        // ---------------------------- //
+        // Create button to show or hide organism text **FIX**
         let playButton = this.add.image(30, 7, CST.IMAGE.START).setDepth(1).setScale(0.05);
         playButton.alpha = 0.9;
 
@@ -160,26 +150,23 @@ export class PlayScene extends Phaser.Scene {
                 this.orgText.setVisible(false);
                 this.updateLabel.setVisible(false);
                 this.updateText.setVisible(false);
-
             } else {
                 this.orgLabel.setVisible(true);
                 this.orgText.setVisible(true);
                 this.updateLabel.setVisible(true);
-                this.updateText.setVisible(true);
-                
+                this.updateText.setVisible(true);  
             }
-
 
             playButton.setScale(0.05);
             playButton.clearAlpha();
         })
-        //-------------------------//
 
+        // Create current organisms text object
         this.orgLabel = this.add.text(16, 42, 'THE LIVING', {fontSize: '13px', fill: '#000'}).setDepth(10).setVisible(false);
         this.orgLabel.setAlpha(0.75);
         this.orgText = this.add.text(16, 55, '', {fontSize: '12px', fill: '#fff'}).setDepth(10).setVisible(false);
         this.orgText.setAlpha(0.75);
-
+        // Create organisms update text object
         this.updateLabel = this.add.text(400, 42, 'UPDATES', {fontSize: '13px', fill: '#000'}).setDepth(10).setVisible(false);
         this.updateLabel.setAlpha(0.75);
         this.updateText = this.add.text(400, 55, '', { fontSize: '12px', fill: '#fff' }).setDepth(10).setVisible(false);
@@ -211,14 +198,16 @@ export class PlayScene extends Phaser.Scene {
         //     }
         // });
 
+        // Create array to hold organism update data
         this.updateOutput = [];
+        // Create timer that removes first item from array every 3 seconds 
         this.timedUpdate = this.time.addEvent({
             delay: 3000,
             callback: () => {this.updateOutput.shift()},
             callbackScope: this,
             loop: true
         });
-
+        // Create timer that pushes graph data every 30 seconds
         this.graphUpdate = this.time.addEvent({
             delay: 30000,
             callback: this.pushGraph,
@@ -226,36 +215,13 @@ export class PlayScene extends Phaser.Scene {
             loop: true
         })
 
-        // Specify property
-        //this.treeLayer.setCollisionByProperty({collide:true});
-        //waterLayer.setCollisionByProperty({collide:true});
-        
-        // Map events 
-            //by index
-        // this.treeLayer.setTileIndexCallback([96], (Sprite) => {
-        //     //console.log(Sprite.x, Sprite.y)
-        //     Sprite.hp += 10
-        // }, this)
-
-
-
-            //treeLayer.removeTileAt(tile.x, tile.y)
-
-        //this.treeLayer.renderDebug(this.add.graphics)
-         /*
+        /*
         gameobject events:
             animationstart
             animationrepeat
             animationupdate
             animationcomplete
         */
-        //    slime.on("animationupdate", () => {
-        //        console.log("ahhhhh")
-        //    });
-        //    slime.on("animationupdate", () => {
-        //     console.log("LEVELUP")
-        // });
-        
 
     }
     update(time, delta) { //delta 16.666 @ 60fps -- delta is fps in milliseconds
@@ -483,9 +449,6 @@ export class PlayScene extends Phaser.Scene {
             visionArray.push(org.vision)
             speedArray.push(org.speed)
         }
-        //console.log(orgArray.length)
-        //console.log(visionArray)
-        //console.log(speedArray)
         window.dataPacket.avgVision.push(Math.round(visionArray.reduce((a,b)=>{return a+b})/visionArray.length))
         window.dataPacket.avgSpeed.push(Math.round(speedArray.reduce((a,b)=>{return a+b})/speedArray.length))
         window.dataPacket.creatures.push(orgArray.length)
@@ -498,10 +461,5 @@ export class PlayScene extends Phaser.Scene {
         }
         
     }
-
-    
-
-
-
 
 }

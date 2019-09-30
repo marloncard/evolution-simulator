@@ -59,7 +59,6 @@ export class LoadScene extends Phaser.Scene {
         this.loadHTML();
 
         // this.load.image("title_bg", "./assets/title_bg800.jpg");
-        // this.load.image("play_button", "./assets/start.png")
 
         //this.load.audio("title_music", "./assets/some-song.mp3")
 
@@ -86,8 +85,6 @@ export class LoadScene extends Phaser.Scene {
         }
         */
         
-
-
         this.load.on("progress", (percent) => {
             loadingBar.fillRect(0, this.game.renderer.height / 2, this.game.renderer.width * percent, 50);
             console.log(percent);
