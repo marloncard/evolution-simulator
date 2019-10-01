@@ -250,7 +250,6 @@ function (_Phaser$Scene) {
       });
       this.loadImages();
       this.loadHTML(); // this.load.image("title_bg", "./assets/title_bg800.jpg");
-      // this.load.image("play_button", "./assets/start.png")
       //this.load.audio("title_music", "./assets/some-song.mp3")
       // create loading bar
 
@@ -348,34 +347,29 @@ function (_Phaser$Scene) {
   }, {
     key: "create",
     value: function create() {
+      // Add title image
       this.add.image(0, 0, _CST.CST.IMAGE.TITLE).setOrigin(0).setDepth;
       var text = this.add.text(10, 10, '', {
         color: 'black',
         fontFamily: 'Arial',
         fontSize: '32px '
-      }); // Input elements
+      }); // Render input elements
 
       var element = this.add.dom(this.game.renderer.width / 2, this.game.renderer.height / 2 + 150).createFromCache(_CST.CST.TEXT.INPUT).setDepth(2);
       element.addListener('click');
       this.slimeCount = "";
       this.mutationRate = "";
-      this.treeCount = "";
+      this.treeCount = ""; // Create "on click" event to pass form settings to variables
+
       element.on('click', function (event) {
         if (event.target.name === 'submitButton') {
-          console.log(this === element);
-          console.log(this.constructor.name);
-          console.log(event.target.constructor.name);
           this.slimeCount = element.getChildByName('slimeCount').value;
           this.mutationRate = element.getChildByName('mutationRate').value;
           this.treeCount = element.getChildByName('treeCount').value;
-          console.log(this.slimeCount);
 
           if (this.slimeCount.value !== '' && this.mutationRate.value !== '' && this.treeCount.value !== '') {
-            element.removeListener('click');
-            console.log(this.slimeCount);
-            console.log("clickety click!");
-            console.log(this === element);
-            console.log(this.constructor.name);
+            element.removeListener('click'); // Start "PLAY" scene and pass it form variables
+
             this.scene.start(_CST.CST.SCENES.PLAY, {
               slimeCount: this.slimeCount,
               mutationRate: this.mutationRate,
@@ -396,10 +390,7 @@ function (_Phaser$Scene) {
               pointerup - click and release
               pointerdown - just  click
         */
-    } // update () {
-    //     console.log(this.slimeCount.value)
-    // }
-
+    }
   }]);
 
   return MenuScene;
@@ -573,6 +564,7 @@ function (_Phaser$Scene) {
     key: "preload",
     value: function preload() {
       // Create animations
+      // -- Idle Animation
       this.anims.create({
         key: 'idle',
         frames: this.anims.generateFrameNames('slime', {
@@ -583,7 +575,8 @@ function (_Phaser$Scene) {
         }),
         frameRate: 5,
         repeat: -1
-      });
+      }); // -- North Animation
+
       this.anims.create({
         key: 'north',
         frames: this.anims.generateFrameNames('slime', {
@@ -594,7 +587,8 @@ function (_Phaser$Scene) {
         }),
         frameRate: 15,
         repeat: -1
-      });
+      }); // -- South Animation
+
       this.anims.create({
         key: 'south',
         frames: this.anims.generateFrameNames('slime', {
@@ -605,7 +599,8 @@ function (_Phaser$Scene) {
         }),
         frameRate: 15,
         repeat: -1
-      });
+      }); // -- West Animation
+
       this.anims.create({
         key: 'west',
         frames: this.anims.generateFrameNames('slime', {
@@ -621,26 +616,26 @@ function (_Phaser$Scene) {
       this.load.image('tileset', './assets/maps/overworld_tileset_grass.png');
       this.load.tilemapTiledJSON('map', './assets/maps/evo-tileset.json');
       this.load.image('tree', './assets/image/overworld-92.png'); // Ouput files loaded to console
-
-      this.load.on("load", function (file) {
-        console.log(file.src);
-      });
+      // this.load.on("load", (file) => {
+      //     console.log(file.src)
+      // })
     }
   }, {
     key: "create",
     value: function create() {
       var _this = this;
 
-      //const map = this.make.tilemap({ key: 'map'});
-      var map = this.add.tilemap('map'); //const tileset = map.addTilesetImage('evo-default', 'tileset');
+      // Initialize map
+      var map = this.add.tilemap('map'); // Initialize tileset
 
       var tileset = map.addTilesetImage('evo-default', 'tileset'); // Layers
 
       var baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1); //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
       //let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
       //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
+      // Create empty physics group for trees
 
-      this.trees = this.physics.add.group(); // Add trees group to the window object to make accessible in console
+      this.trees = this.physics.add.group(); // Add trees group to the window object to make accessible globally
 
       window.trees = this.trees; // Create n number of trees at random locations troughout the grid;
 
@@ -679,12 +674,7 @@ function (_Phaser$Scene) {
 
       ;
       this.gameTime = 0;
-      this.nameCounter = 0; //let slime = this.physics.add.sprite(100, 330,'slime', 'slime-05.png');
-      //let slime = new Sprite(this, 100, 100, CST.SPRITE.SLIME)
-      //this.physics.add.existing() //manual add
-      //window.slime = slime; // Add slime to window object to access from console.
-      //slime.setInteractive().setAlpha(0.5)
-      //this.input.on("gameobjectdown", this.onObjectClicked);
+      this.nameCounter = 0; // Create organisms physics group and populate using this.slimeCount
 
       this.organisms = this.physics.add.group({
         classType: _Sprite.Sprite
@@ -702,20 +692,18 @@ function (_Phaser$Scene) {
         this.nameCounter++;
       }
 
-      ;
+      ; // Add organisms group to the window object to make accessible globally
+
       window.organisms = this.organisms; // Takes an array of objects and passes each of them to the given callback.
 
       Phaser.Actions.Call(this.organisms.getChildren(), function (organism) {
-        // make item interactive
-        organism.setInteractive();
-        organism.setBounce(0.5, 0.5);
+        // Make organisms interactive
+        organism.setInteractive(); // Set organism bounce
+
+        organism.setBounce(0.5, 0.5); // Set organism collision with world bounds
+
         organism.setCollideWorldBounds(true);
-      }, this); //this.body.onWorldBounds = true;
-      // this.physics.arcade.collide(this.organisms), (organism) => {
-      //     organism.destroy();
-      // }
-      //slime.setCollideWorldBounds(true);
-      // Text objects
+      }, this); // Create world timer text object
 
       var timerText = this.add.text(16, 16, 'Timer: ' + 0, {
         fontSize: '12px',
@@ -729,7 +717,7 @@ function (_Phaser$Scene) {
         },
         callbackScope: this,
         repeat: -1
-      }); // ---------------------------- //
+      }); // Create button to show or hide organism text **FIX**
 
       var playButton = this.add.image(30, 7, _CST.CST.IMAGE.START).setDepth(1).setScale(0.05);
       playButton.alpha = 0.9;
@@ -763,7 +751,7 @@ function (_Phaser$Scene) {
 
         playButton.setScale(0.05);
         playButton.clearAlpha();
-      }); //-------------------------//
+      }); // Create current organisms text object
 
       this.orgLabel = this.add.text(16, 42, 'THE LIVING', {
         fontSize: '13px',
@@ -774,7 +762,8 @@ function (_Phaser$Scene) {
         fontSize: '12px',
         fill: '#fff'
       }).setDepth(10).setVisible(false);
-      this.orgText.setAlpha(0.75);
+      this.orgText.setAlpha(0.75); // Create organisms update text object
+
       this.updateLabel = this.add.text(400, 42, 'UPDATES', {
         fontSize: '13px',
         fill: '#000'
@@ -828,8 +817,10 @@ function (_Phaser$Scene) {
       //         this.randomMovement(org);
       //     }
       // });
+      // Create array to hold organism update data
 
-      this.updateOutput = [];
+      this.updateOutput = []; // Create timer that removes first item from array every 3 seconds 
+
       this.timedUpdate = this.time.addEvent({
         delay: 3000,
         callback: function callback() {
@@ -837,37 +828,21 @@ function (_Phaser$Scene) {
         },
         callbackScope: this,
         loop: true
-      });
+      }); // Create timer that pushes graph data every 30 seconds
+
       this.graphUpdate = this.time.addEvent({
         delay: 30000,
         callback: this.pushGraph,
         callbackScope: this,
         loop: true
-      }); // Specify property
-      //this.treeLayer.setCollisionByProperty({collide:true});
-      //waterLayer.setCollisionByProperty({collide:true});
-      // Map events 
-      //by index
-      // this.treeLayer.setTileIndexCallback([96], (Sprite) => {
-      //     //console.log(Sprite.x, Sprite.y)
-      //     Sprite.hp += 10
-      // }, this)
-      //treeLayer.removeTileAt(tile.x, tile.y)
-      //this.treeLayer.renderDebug(this.add.graphics)
-
+      });
       /*
       gameobject events:
-         animationstart
-         animationrepeat
-         animationupdate
-         animationcomplete
+          animationstart
+          animationrepeat
+          animationupdate
+          animationcomplete
       */
-      //    slime.on("animationupdate", () => {
-      //        console.log("ahhhhh")
-      //    });
-      //    slime.on("animationupdate", () => {
-      //     console.log("LEVELUP")
-      // });
     }
   }, {
     key: "update",
@@ -1199,10 +1174,7 @@ function (_Phaser$Scene) {
           var org = _step7.value;
           visionArray.push(org.vision);
           speedArray.push(org.speed);
-        } //console.log(orgArray.length)
-        //console.log(visionArray)
-        //console.log(speedArray)
-
+        }
       } catch (err) {
         _didIteratorError7 = true;
         _iteratorError7 = err;
@@ -1488,7 +1460,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64559" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56565" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
