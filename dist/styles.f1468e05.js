@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+})({"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -149,7 +149,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -184,12 +184,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"dist/assets/css/styles.css":[function(require,module,exports) {
+},{"./bundle-url":"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"dist/assets/css/styles.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./../fonts/Sabo_Font/Sabo-Regular.otf":[["Sabo-Regular.0e2091f1.otf","dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"./../fonts/Sabo_Font/Sabo-Filled.otf":[["Sabo-Filled.1359abfd.otf","dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"./../image/background2.jpg":[["background2.c1047001.jpg","dist/assets/image/background2.jpg"],"dist/assets/image/background2.jpg"],"_css_loader":"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./../fonts/Sabo_Font/Sabo-Regular.otf":[["Sabo-Regular.0e2091f1.otf","dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Regular.otf"],"./../fonts/Sabo_Font/Sabo-Filled.otf":[["Sabo-Filled.1359abfd.otf","dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"dist/assets/fonts/Sabo_Font/Sabo-Filled.otf"],"./../image/background2.jpg":[["background2.c1047001.jpg","dist/assets/image/background2.jpg"],"dist/assets/image/background2.jpg"],"_css_loader":"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -217,7 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56565" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64087" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -248,8 +248,9 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
         assetsToAccept.forEach(function (v) {
           hmrAcceptRun(v[0], v[1]);
         });
-      } else {
-        window.location.reload();
+      } else if (location.reload) {
+        // `location` global exists in a web worker context but lacks `.reload()` function.
+        location.reload();
       }
     }
 
@@ -392,5 +393,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+},{}]},{},["../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
 //# sourceMappingURL=/styles.f1468e05.js.map

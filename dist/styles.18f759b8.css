@@ -1,0 +1,58 @@
+@font-face {
+    font-family: sabo;
+    src: url(/Sabo-Regular.7c6e7a7f.otf);
+}
+@font-face {
+    font-family: sabo-filled;
+    src: url(/Sabo-Filled.d6c3c146.otf);
+}
+body {
+    background-image: url("/background2.fd56d1e1.jpg");
+    background-position: center bottom;
+  }
+
+.jumbotron {
+    background-color: #ffffff;
+}
+
+.navbar-brand {
+    font-family: sabo;
+    font-size: 2rem;
+}
+.nav-item {
+    font-family: sabo-filled;
+}
+h6 {
+    color: white;
+}
+#input1 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#input2 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#input3 {
+    display: inline-block;
+    margin-right: 20px;
+}
+#submitButton {
+    display: inline-block;
+}
+header {
+    margin-top: 0px;
+    background-color: transparent !important;
+    float: center;
+}
+.my-4 {
+    margin-top: .6rem!important;
+}
+#phaser-tag {
+    padding-top: 0px;
+}
+#chart {
+    background-color: white;
+}
+
+/*# sourceMappingURL=/styles.18f759b8.css.map */

@@ -1,0 +1,8 @@
+{
+  "name": "evolution-simulator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:marloncard/evolution-simulator.git",
+  "author": "Marlon Card <marloncard@gmail.com>",
+  "license": "MIT"
+}
