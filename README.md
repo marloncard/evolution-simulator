@@ -1,7 +1,7 @@
 # Evolution Simulator
 by Marlon Card
 
-http://52.91.234.200/
+http://evolution.marloncard.com
 
 
 ## Requirements
