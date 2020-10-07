@@ -127,18 +127,18 @@ export class PlayScene extends Phaser.Scene {
         });
         
         // Create button to show or hide organism text **FIX**
-        let playButton = this.add.image(30, 7, CST.IMAGE.START).setDepth(1).setScale(0.05);
+        let playButton = this.add.image(150, 22, CST.IMAGE.START).setDepth(1).setScale(0.75);
         playButton.alpha = 0.9;
 
         playButton.setInteractive();
 
         playButton.on("pointerover", () => {
-            playButton.setScale(0.06)
+            playButton.setScale(0.80)
             playButton.clearAlpha();
         })
 
         playButton.on("pointerout", () => {
-            playButton.setScale(0.05)
+            playButton.setScale(0.75)
             playButton.alpha = 0.9;
             //this.scene.start();
         })
@@ -157,8 +157,8 @@ export class PlayScene extends Phaser.Scene {
                 this.updateText.setVisible(true);  
             }
 
-            playButton.setScale(0.05);
-            playButton.clearAlpha();
+            playButton.setScale(0.75);
+            playButton.alpha = 0.5;
         })
 
         // Create current organisms text object

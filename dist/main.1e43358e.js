@@ -131,7 +131,7 @@ var CST = {
     PLAY: "PLAY"
   },
   IMAGE: {
-    START: "eye.png",
+    START: "button_info.png",
     TITLE: "title_bg800.jpg"
   },
   AUDIO: {
@@ -731,15 +731,15 @@ var PlayScene = /*#__PURE__*/function (_Phaser$Scene) {
         repeat: -1
       }); // Create button to show or hide organism text **FIX**
 
-      var playButton = this.add.image(30, 7, _CST.CST.IMAGE.START).setDepth(1).setScale(0.05);
+      var playButton = this.add.image(150, 22, _CST.CST.IMAGE.START).setDepth(1).setScale(0.75);
       playButton.alpha = 0.9;
       playButton.setInteractive();
       playButton.on("pointerover", function () {
-        playButton.setScale(0.06);
+        playButton.setScale(0.80);
         playButton.clearAlpha();
       });
       playButton.on("pointerout", function () {
-        playButton.setScale(0.05);
+        playButton.setScale(0.75);
         playButton.alpha = 0.9; //this.scene.start();
       });
       playButton.on("pointerup", function (event) {
@@ -761,8 +761,8 @@ var PlayScene = /*#__PURE__*/function (_Phaser$Scene) {
           _this.updateText.setVisible(true);
         }
 
-        playButton.setScale(0.05);
-        playButton.clearAlpha();
+        playButton.setScale(0.75);
+        playButton.alpha = 0.5;
       }); // Create current organisms text object
 
       this.orgLabel = this.add.text(16, 42, 'THE LIVING', {
@@ -1413,7 +1413,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64087" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52080" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
