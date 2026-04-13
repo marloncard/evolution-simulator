@@ -9,10 +9,4 @@ __pycache__
 ssh
 node_modules
 .parcel-cache/
-dist/*.js
-dist/*.js.map
-dist/*.css
-dist/*.css.map
-dist/*.otf
-dist/*.jpg
-dist/index.html
+build/

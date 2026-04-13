@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "source": "index.html",
   "scripts": {
-    "start": "parcel --cache-dir /tmp/parcel-evolution-simulator",
-    "build": "parcel build --cache-dir /tmp/parcel-evolution-simulator"
+    "start": "parcel index.html --dist-dir build --cache-dir /tmp/parcel-evolution-simulator",
+    "build": "parcel build index.html --dist-dir build --cache-dir /tmp/parcel-evolution-simulator"
   },
   "repository": "git@github.com:marloncard/evolution-simulator.git",
   "author": "Marlon Card <marloncard@gmail.com>",

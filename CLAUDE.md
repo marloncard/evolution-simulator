@@ -30,7 +30,7 @@ The game runs through three sequential Phaser scenes defined in `src/main.js`:
 2. **MenuScene** — configuration form (population size, mutation rate, tree count)
 3. **PlayScene** — the main simulation loop
 
-**`src/Sprite.js`** defines the `Organism` class (extends `Phaser.Physics.Arcade.Sprite`). Core traits: `hp`, `age`, `speed`, `vision`, `generation`. Key methods: `senescense()` (aging/HP decay), `metabolise()`.
+**`src/Sprite.js`** defines the `Sprite` class (extends `Phaser.Physics.Arcade.Sprite`). Core traits: `hp`, `age`, `speed`, `vision`, `generation`. Key methods: `senescense()` (aging/HP decay), `metabolise()`.
 
 **`src/scenes/PlayScene.js`** drives the simulation each frame:
 - Organisms seek food (trees) within their `vision` radius
