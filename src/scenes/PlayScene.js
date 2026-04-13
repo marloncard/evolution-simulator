@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { CST } from "../CST";
 import { Sprite } from "../Sprite";
 
@@ -43,7 +44,7 @@ export class PlayScene extends Phaser.Scene {
     // -- West Animation
     this.anims.create({
         key: 'west',
-        frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: 9, end: 12, suffix: '.png'}),
+        frames: this.anims.generateFrameNames('slime', {prefix:'slime-', start: 9, end: 12, zeroPad: 2, suffix: '.png'}),
         frameRate:15,
         repeat: -1
     })
@@ -65,7 +66,7 @@ export class PlayScene extends Phaser.Scene {
         let tileset = map.addTilesetImage('evo-default', 'tileset')
 
         // Layers
-        let baseLayer = map.createStaticLayer("Base", tileset, 0, 0).setDepth(-1);
+        let baseLayer = map.createLayer("Base", tileset, 0, 0).setDepth(-1);
         //this.treeLayer = map.createStaticLayer("Trees", tileset, 0, 0);
         //let waterLayer = map.createStaticLayer("Water", tileset, 0, 0);
         //const structureLayer = map.createStaticLayer("Structures", tileset, 0, 0).setDepth(0);
