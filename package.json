@@ -1,8 +1,19 @@
 {
   "name": "evolution-simulator",
   "version": "1.0.0",
-  "main": "index.js",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel index.html --dist-dir build --cache-dir /tmp/parcel-evolution-simulator",
+    "build": "parcel build index.html --dist-dir build --cache-dir /tmp/parcel-evolution-simulator"
+  },
   "repository": "git@github.com:marloncard/evolution-simulator.git",
   "author": "Marlon Card <marloncard@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.16.4",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
 }

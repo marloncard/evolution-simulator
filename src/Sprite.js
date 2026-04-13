@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 export class Sprite extends Phaser.Physics.Arcade.Sprite {
     /**
      * 

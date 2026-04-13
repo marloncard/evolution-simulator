@@ -8,3 +8,5 @@ __pycache__
 *.pem
 ssh
 node_modules
+.parcel-cache/
+build/

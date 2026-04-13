@@ -9,10 +9,15 @@
 body {
     background-image: url("../image/background2.jpg");
     background-position: center bottom;
+    padding-top: 70px;
   }
 
 .jumbotron {
     background-color: #ffffff;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar-brand {
@@ -50,6 +55,8 @@ header {
 }
 #phaser-tag {
     padding-top: 0px;
+    display: flex;
+    justify-content: center;
 }
 #chart {
     background-color: white;

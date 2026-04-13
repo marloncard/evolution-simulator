@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Evolution Simulator</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./dist/assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
@@ -24,14 +24,14 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
           <a class="navbar-brand" href="#">Evolution Simulator</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
               <li class="nav-item active">
                 <a class="nav-link" href="#">Home
-                  <span class="sr-only">(current)</span>
+                  <span class="visually-hidden">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -90,14 +90,9 @@
     
 
 
-      <script src="./lib/phaser.js"></script>
-      <script src="./src/main.js"></script>
-      <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-      <!--
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="./src/main.js" type="module"></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmFwxGfRHBnX2mMr/P3tU9Pbxbh" crossorigin="anonymous"></script>
       <!--<script src="./src/data.js"></script>-->
       <script>
           //window.addEventListener('load', () => {
@@ -105,11 +100,11 @@
               let slimeSlider = document.getElementById('slimeCount');
               let mutationSlider = document.getElementById('mutationRate');
               let treeSlider = document.getElementById('treeCount');
-              
-              
               let slimeOutput = document.getElementById('slimeOutput');
               let mutationOutput = document.getElementById('mutationOutput');
               let treeOutput = document.getElementById('treeOutput');
+
+              if (!slimeSlider || !mutationSlider || !treeSlider) return;
 
               slimeOutput.innerHTML = slimeSlider.value;
               mutationOutput.innerHTML = mutationSlider.value;
@@ -134,15 +129,14 @@
 
       <script>
         $("#myLink").on("click", ()=> {
-          
+
           if (document.getElementById("chart") === null) {
             $("#result").load("assets/text/chart.html", function() {
                   $("#result2").load("assets/text/data.html");
-                  // setTimeout(()=>{window.scrollTo(0,document.body.scrollHeight);},200)
                 });
-                $("#phaser-tag").hide();
+                $("header.jumbotron").hide();
           } else {
-            $("#phaser-tag").show();
+            $("header.jumbotron").show();
             let div = document.getElementById('result');
             let div2 = document.getElementById('result2');
             div.innerHTML = "";
